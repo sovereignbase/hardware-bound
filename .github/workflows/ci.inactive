@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
@@ -59,7 +59,7 @@ jobs:
         uses: googleapis/release-please-action@v3
         with:
           release-type: node
-          package-name: '@z-base/zero-knowledge-credentials'
+          package-name: '@sovereignbase/hardware-bound'
 
   publish:
     if: needs.release-please.outputs.release_created == 'true'
@@ -69,9 +69,9 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
           registry-url: https://registry.npmjs.org
@@ -81,3 +81,10 @@ jobs:
       - run: npm run build --if-present
 
       - run: npm publish --access public --ignore-scripts
+
+      - name: Sync jsr.json version from package.json
+        run: |
+          node -e "const fs=require('node:fs'); const pkg=JSON.parse(fs.readFileSync('package.json','utf8')); const jsr=JSON.parse(fs.readFileSync('jsr.json','utf8')); jsr.version=pkg.version; fs.writeFileSync('jsr.json', JSON.stringify(jsr, null, 2) + '\n');"
+
+      - name: Publish to JSR
+        run: npx jsr publish --allow-dirty

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
+  "name": "@sovereignbase/pkg",
+  "version": "0.0.0",
+  "exports": "./src/index.ts",
+  "publish": {
+    "include": [
+      "package.json",
+      "src/**/*.ts",
+      "src/**/.*/**/*.ts",
+      "README.md",
+      "LICENSE"
+    ]
+  }
+}

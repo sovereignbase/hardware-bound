@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Getting deterministic entropy from a device to boot starp
+      zero-knowledgeapps
+    </title>
+    <link
+      rel="shortcut icon"
+      href="https://sovereignbase.dev/sovereignbase_logo.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <label for="name">Display name:</label>
+    <input id="name" type="text" />
+    <button id="create">create device binding</button>
+    <button id="derive">derive device entropy</button>
+    <p>Entropy:<output id="result"></output></p>
+    <a href="@sovereignbase/hardware-bound">npm registry</a>
+    <a href="@sovereignbase/hardware-bound">jsr registry</a>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
