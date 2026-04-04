@@ -2,7 +2,7 @@
   "type": "module",
   "license": "Apache-2.0",
   "name": "@sovereignbase/hardware-bound",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Creates a device-bound browser credential and derives stable entropy bytes from it for bootstrapping local cryptographic state.",
   "keywords": [
     "entropy",

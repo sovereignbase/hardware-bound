@@ -12,6 +12,18 @@ const prfInput2: BufferSource = toBufferSource(
   fromString('INFO:ENTROPY_FROM_SECOND_PRF_RESULT')
 )
 
+/**
+ * Creates a device-bound credential for the current origin.
+ *
+ * The created credential is configured for a platform authenticator, requires
+ * user verification, and evaluates two fixed PRF inputs that can later be used
+ * to derive deterministic entropy with {@link deriveDeviceEntropy}.
+ *
+ * @param usersDisplayName Human-readable name stored in the created credential.
+ * @param signal An optional abort signal that can be used to cancel the request.
+ * @returns A promise that resolves to `true` when the credential is created, or
+ * `false` when creation fails or is cancelled.
+ */
 export async function createDeviceBinding(
   usersDisplayName: string,
   signal?: AbortSignal
@@ -53,6 +65,17 @@ export async function createDeviceBinding(
   }
 }
 
+/**
+ * Derives deterministic entropy bytes from an existing device-bound credential.
+ *
+ * The returned value is the concatenation of the credential raw identifier and
+ * the two PRF outputs requested by this library. This function returns `false`
+ * when no suitable credential is available or when entropy derivation fails.
+ *
+ * @param signal An optional abort signal that can be used to cancel the request.
+ * @returns A promise that resolves to the derived entropy bytes, or `false` if
+ * derivation is unavailable or fails.
+ */
 export async function deriveDeviceEntropy(
   signal?: AbortSignal
 ): Promise<Uint8Array | false> {
