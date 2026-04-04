@@ -1,3 +1,4 @@
-import { ZKCredentials } from '../../../dist/index.js'
-
-export { ZKCredentials }
+export {
+  createDeviceBinding,
+  deriveDeviceEntropy,
+} from '../../../dist/index.js'

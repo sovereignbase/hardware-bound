@@ -3,24 +3,238 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Getting deterministic entropy from a device to boot starp
-      zero-knowledgeapps
-    </title>
+    <title>Hardware-bound entropy for browser crypto</title>
     <link
       rel="shortcut icon"
       href="https://sovereignbase.dev/sovereignbase_logo.png"
       type="image/x-icon"
     />
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+        background: #000;
+        color: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(255, 255, 255, 0.1),
+            transparent 36%
+          ),
+          #000;
+        color: #fff;
+      }
+
+      main {
+        width: min(100%, 42rem);
+        margin: 0 auto;
+        padding: 1.25rem;
+      }
+
+      .shell {
+        display: grid;
+        gap: 1.25rem;
+        padding: 1.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 1.25rem;
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.45);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 8vw, 3.4rem);
+        line-height: 0.95;
+      }
+
+      .lede {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.76);
+        line-height: 1.6;
+      }
+
+      .controls {
+        display: grid;
+        gap: 1rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.55rem;
+        font-size: 0.95rem;
+      }
+
+      input,
+      button,
+      a {
+        border-radius: 999px;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: #050505;
+        color: #fff;
+        font: inherit;
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.38);
+      }
+
+      .actions {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      button {
+        width: 100%;
+        padding: 0.95rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: #fff;
+        color: #000;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button.secondary {
+        background: transparent;
+        color: #fff;
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: progress;
+      }
+
+      .status {
+        margin: 0;
+        min-height: 1.5rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .result {
+        display: grid;
+        gap: 0.5rem;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .result-label {
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      output {
+        display: block;
+        overflow-wrap: anywhere;
+        font-family: 'IBM Plex Mono', 'Cascadia Code', monospace;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        min-height: 2.5rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .links img {
+        width: 1rem;
+        height: 1rem;
+        flex: 0 0 1rem;
+      }
+
+      @media (min-width: 40rem) {
+        main {
+          padding: 2rem;
+        }
+
+        .shell {
+          padding: 1.75rem;
+        }
+
+        .actions {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
   </head>
   <body>
-    <label for="name">Display name:</label>
-    <input id="name" type="text" />
-    <button id="create">create device binding</button>
-    <button id="derive">derive device entropy</button>
-    <p>Entropy:<output id="result"></output></p>
-    <a href="@sovereignbase/hardware-bound">npm registry</a>
-    <a href="@sovereignbase/hardware-bound">jsr registry</a>
+    <main>
+      <section class="shell">
+        <h1>Hardware-bound entropy for the browser.</h1>
+        <p class="lede">
+          Create a platform credential for this origin, then derive
+          deterministic entropy from the authenticator PRF output.
+        </p>
+
+        <div class="controls">
+          <label for="name">
+            Display name
+            <input id="name" type="text" placeholder="Ada Lovelace" />
+          </label>
+
+          <div class="actions">
+            <button id="create" type="button">Create device binding</button>
+            <button id="derive" class="secondary" type="button">
+              Derive device entropy
+            </button>
+          </div>
+
+          <p id="status" class="status" role="status" aria-live="polite">
+            Ready.
+          </p>
+
+          <div class="result">
+            <span class="result-label">Entropy</span>
+            <output id="result">Not derived yet.</output>
+          </div>
+        </div>
+
+        <nav class="links" aria-label="Project links">
+          <a href="https://jsr.io/@sovereignbase/hardware-bound">
+            <img src="https://cdn.simpleicons.org/jsr/white" alt="" />
+            jsr
+          </a>
+          <a href="https://www.npmjs.com/package/@sovereignbase/hardware-bound">
+            <img src="https://cdn.simpleicons.org/npm/white" alt="" />
+            npm
+          </a>
+          <a href="https://github.com/sovereignbase/hardware-bound">
+            <img src="https://cdn.simpleicons.org/github/white" alt="" />
+            GitHub
+          </a>
+        </nav>
+      </section>
+    </main>
     <script type="module" src="./index.js"></script>
   </body>
 </html>

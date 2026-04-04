@@ -1,8 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { ZKCredentials } from '../../dist/index.js'
+import { createDeviceBinding, deriveDeviceEntropy } from '../../dist/index.js'
 
-test('dist index exports ZKCredentials', () => {
-  assert.equal(typeof ZKCredentials.registerCredential, 'function')
-  assert.equal(typeof ZKCredentials.discoverCredential, 'function')
+test('dist index exports browser helpers', () => {
+  assert.equal(typeof createDeviceBinding, 'function')
+  assert.equal(typeof deriveDeviceEntropy, 'function')
 })

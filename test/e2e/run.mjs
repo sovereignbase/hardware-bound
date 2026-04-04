@@ -13,7 +13,7 @@ await build({
   format: 'iife',
   platform: 'browser',
   target: 'es2022',
-  globalName: 'ZKCredentialsBundle',
+  globalName: 'HardwareBoundBundle',
   external: ['node:*'],
 })
 

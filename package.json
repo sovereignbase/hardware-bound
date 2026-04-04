@@ -3,10 +3,17 @@
   "license": "Apache-2.0",
   "name": "@sovereignbase/hardware-bound",
   "version": "0.0.0",
-  "description": "",
+  "description": "Browser-first WebAuthn helpers for creating a device binding and deriving hardware-bound entropy.",
   "keywords": [
-    "typescript",
-    "sovereignbase"
+    "webauthn",
+    "passkeys",
+    "browser",
+    "entropy",
+    "device-binding",
+    "hardware-bound",
+    "prf",
+    "sovereignbase",
+    "typescript"
   ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

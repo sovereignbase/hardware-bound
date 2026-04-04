@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>zero-knowledge-credentials e2e</title>
+    <title>hardware-bound e2e</title>
   </head>
   <body>
     <script src="/test/e2e/fixtures/zkcredentials.bundle.js"></script>
     <script>
-      if (globalThis.ZKCredentialsBundle?.ZKCredentials) {
-        globalThis.ZKCredentials = globalThis.ZKCredentialsBundle.ZKCredentials
+      if (globalThis.HardwareBoundBundle) {
+        globalThis.hardwareBound = globalThis.HardwareBoundBundle
       }
     </script>
   </body>
