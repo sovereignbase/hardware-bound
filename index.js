@@ -150,8 +150,12 @@ __export(dist_exports, {
 var timeout = 6e4;
 var mediation = "required";
 var userVerification = "required";
-var prfInput1 = toBufferSource(fromString("INFO:ENTROPY_FROM_FIRST_PRF_RESULT"));
-var prfInput2 = toBufferSource(fromString("INFO:ENTROPY_FROM_SECOND_PRF_RESULT"));
+var prfInput1 = toBufferSource(
+  fromString("INFO:ENTROPY_FROM_FIRST_PRF_RESULT")
+);
+var prfInput2 = toBufferSource(
+  fromString("INFO:ENTROPY_FROM_SECOND_PRF_RESULT")
+);
 async function createDeviceBinding(usersDisplayName, signal) {
   const publicKey = {
     rp: { id: window.location.hostname, name: window.location.host },
@@ -227,7 +231,7 @@ async function deriveDeviceEntropy(signal) {
 }
 
 // in-browser-testing-libs.js
-globalThis.platformAuthenticator = dist_exports;
+globalThis.hardware = dist_exports;
 var nameInput = document.getElementById("name");
 var createButton = document.getElementById("create");
 var deriveButton = document.getElementById("derive");
@@ -237,5 +241,6 @@ createButton.addEventListener("click", async () => {
 });
 deriveButton.addEventListener("click", async () => {
   const result = await deriveDeviceEntropy();
+  console.log(result);
   resultOutput.textContent = toBase64UrlString(result);
 });

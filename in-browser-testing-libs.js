@@ -17,5 +17,6 @@ createButton.addEventListener('click', async () => {
 
 deriveButton.addEventListener('click', async () => {
   const result = await hardware.deriveDeviceEntropy()
+  console.log(result)
   resultOutput.textContent = toBase64UrlString(result)
 })

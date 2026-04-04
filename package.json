@@ -31,7 +31,7 @@
   "sideEffects": false,
   "scripts": {
     "format": "prettier . --write",
-    "build": "tsup",
+    "build": "tsup && node in-browser-testing-build.js",
     "test": "npm run build && node test/run-coverage.mjs && node test/e2e/run.mjs",
     "prepare": "husky",
     "prepublishOnly": "npm run test"
