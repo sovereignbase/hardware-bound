@@ -106,9 +106,7 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm run build --if-present
-
-      - run: npm publish --access public --ignore-scripts
+      - run: npm run build:package
 
       - name: Sync jsr.json version from package.json
         run: |
@@ -122,6 +120,8 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "chore: sync JSR version"
           git push
+
+      - run: npm publish --access public --ignore-scripts
 
       - name: Publish to JSR
         run: npx jsr publish

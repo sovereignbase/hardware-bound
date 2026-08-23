@@ -39,7 +39,9 @@
   "sideEffects": false,
   "scripts": {
     "format": "prettier . --write",
-    "build": "tsdown && node in-browser-testing-build.js",
+    "build": "npm run build:package && npm run build:demo",
+    "build:package": "tsdown",
+    "build:demo": "node in-browser-testing-build.js",
     "test": "npm run build && npm run test:typecheck && vitest run && node test/e2e/run.mjs",
     "test:typecheck": "tsc --noEmit --project test/tsconfig.json",
     "prepare": "husky",
