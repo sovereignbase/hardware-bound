@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/sovereignbase/hardware-bound/compare/v2.0.0...v2.0.1) (2026-08-23)
+
+
+### Bug Fixes
+
+* keep JSR publish worktree clean ([b11b237](https://github.com/sovereignbase/hardware-bound/commit/b11b2373e2ba687297daae67259d5a78cf8dd70d))
+
 ## [2.0.0](https://github.com/sovereignbase/hardware-bound/compare/v1.0.0...v2.0.0) (2026-08-23)
 
 
