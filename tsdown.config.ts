@@ -1,6 +1,7 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsdown/config'
 
-const apache2Banner = [
+/** Apache-2.0 notice prepended to every emitted JavaScript bundle. */
+const apache_2_banner = [
   '/*',
   ` * Copyright ${new Date().getUTCFullYear()} Sovereignbase`,
   ' *',
@@ -19,6 +20,7 @@ const apache2Banner = [
 ].join('\n')
 
 export default defineConfig({
+  // Emit equivalent ESM and CommonJS packages from the documented public API.
   entry: ['src/index.ts'],
   format: ['esm', 'cjs'],
   outDir: 'dist',
@@ -27,12 +29,12 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  splitting: true,
   banner: {
-    js: `${apache2Banner}\n`,
+    js: `${apache_2_banner}\n`,
   },
-  external: [],
-  outExtension({ format }) {
-    return { js: format === 'cjs' ? '.cjs' : '.js' }
+  outExtensions({ format }) {
+    return {
+      js: format === 'cjs' ? '.cjs' : '.js',
+    }
   },
 })

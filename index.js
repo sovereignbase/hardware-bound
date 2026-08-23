@@ -23,6 +23,47 @@ var BytecodecError = class extends Error {
     this.name = 'BytecodecError'
   }
 }
+var textEncoder = typeof TextEncoder !== 'undefined' ? new TextEncoder() : null
+var textDecoder = typeof TextDecoder !== 'undefined' ? new TextDecoder() : null
+var HEX_PAIRS = Array.from({ length: 256 }, (_, value) =>
+  value.toString(16).padStart(2, '0')
+)
+var HEX_VALUES = (() => {
+  const table = new Int16Array(128).fill(-1)
+  for (let index = 0; index < 10; index++)
+    table['0'.charCodeAt(0) + index] = index
+  for (let index = 0; index < 6; index++) {
+    table['A'.charCodeAt(0) + index] = index + 10
+    table['a'.charCodeAt(0) + index] = index + 10
+  }
+  return table
+})()
+var BASE45_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
+var BASE45_VALUES = (() => {
+  const table = new Int16Array(128).fill(-1)
+  for (let i = 0; i < BASE45_CHARS.length; i++) {
+    table[BASE45_CHARS.charCodeAt(i)] = i
+  }
+  return table
+})()
+var Z85_CHARS =
+  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#'
+var Z85_VALUES = (() => {
+  const table = new Int16Array(128).fill(-1)
+  for (let i = 0; i < Z85_CHARS.length; i++) {
+    table[Z85_CHARS.charCodeAt(i)] = i
+  }
+  return table
+})()
+var BASE58BTC_CHARS =
+  '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+var BASE58BTC_VALUES = (() => {
+  const table = new Int16Array(128).fill(-1)
+  for (let i = 0; i < BASE58BTC_CHARS.length; i++) {
+    table[BASE58BTC_CHARS.charCodeAt(i)] = i
+  }
+  return table
+})()
 function toBase64String(bytes) {
   const view = toUint8Array(bytes)
   if (typeof Buffer !== 'undefined' && typeof Buffer.from === 'function')
@@ -48,30 +89,6 @@ function toBase64UrlString(bytes) {
   const base64 = toBase64String(bytes)
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
 }
-var textEncoder = typeof TextEncoder !== 'undefined' ? new TextEncoder() : null
-var textDecoder = typeof TextDecoder !== 'undefined' ? new TextDecoder() : null
-var HEX_PAIRS = Array.from({ length: 256 }, (_, value) =>
-  value.toString(16).padStart(2, '0')
-)
-var HEX_VALUES = (() => {
-  const table = new Int16Array(128).fill(-1)
-  for (let index = 0; index < 10; index++)
-    table['0'.charCodeAt(0) + index] = index
-  for (let index = 0; index < 6; index++) {
-    table['A'.charCodeAt(0) + index] = index + 10
-    table['a'.charCodeAt(0) + index] = index + 10
-  }
-  return table
-})()
-var Z85_CHARS =
-  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#'
-var Z85_VALUES = (() => {
-  const table = new Int16Array(128).fill(-1)
-  for (let i = 0; i < Z85_CHARS.length; i++) {
-    table[Z85_CHARS.charCodeAt(i)] = i
-  }
-  return table
-})()
 function fromString(text) {
   if (typeof text !== 'string')
     throw new BytecodecError(
@@ -157,18 +174,27 @@ var prfInput1 = toBufferSource(fromString('INFO:ENTROPY_FROM_FIRST_PRF_RESULT'))
 var prfInput2 = toBufferSource(
   fromString('INFO:ENTROPY_FROM_SECOND_PRF_RESULT')
 )
-async function createDeviceBinding(usersDisplayName, signal) {
+async function createDeviceBinding(credentialName, signal) {
   const publicKey = {
-    rp: { id: window.location.hostname, name: window.location.host },
-    user: {
-      id: crypto.getRandomValues(new Uint8Array(32)),
-      name: usersDisplayName,
-      displayName: usersDisplayName,
+    rp: {
+      id: window.location.hostname,
+      name: window.location.host,
     },
-    challenge: crypto.getRandomValues(new Uint8Array(32)),
+    user: {
+      id: crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(32)),
+      name: credentialName,
+      displayName: credentialName,
+    },
+    challenge: crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(32)),
     pubKeyCredParams: [
-      { type: 'public-key', alg: -7 },
-      { type: 'public-key', alg: -257 },
+      {
+        type: 'public-key',
+        alg: -7,
+      },
+      {
+        type: 'public-key',
+        alg: -257,
+      },
     ],
     authenticatorSelection: {
       authenticatorAttachment: 'platform',
@@ -186,11 +212,30 @@ async function createDeviceBinding(usersDisplayName, signal) {
       },
     },
   }
+  let credential
   try {
-    await navigator.credentials.create({ publicKey, signal })
-    return true
+    credential = await navigator.credentials.create({
+      publicKey,
+      signal,
+    })
   } catch {
-    return false
+    return [false, 'unknown']
+  }
+  if (!credential) return [false, 'unknown']
+  try {
+    const response = credential.response
+    if (!response || typeof response.getAuthenticatorData !== 'function')
+      return [true, 'unknown']
+    const authenticatorData = new Uint8Array(response.getAuthenticatorData())
+    if (authenticatorData.length < 33) return [true, 'unknown']
+    const flags = authenticatorData[32]
+    const backupEligible = (flags & 8) !== 0
+    const backedUp = (flags & 16) !== 0
+    if (!backupEligible && backedUp) return [true, 'unknown']
+    if (!backupEligible) return [true, 'device-bound']
+    return [true, backedUp ? 'synced' : 'sync-eligible']
+  } catch {
+    return [true, 'unknown']
   }
 }
 async function deriveDeviceEntropy(signal) {
@@ -198,7 +243,7 @@ async function deriveDeviceEntropy(signal) {
     const credential = await navigator.credentials.get({
       publicKey: {
         rpId: window.location.hostname,
-        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        challenge: crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(32)),
         allowCredentials: [],
         userVerification,
         timeout,
@@ -220,9 +265,7 @@ async function deriveDeviceEntropy(signal) {
       const prf = credential.getClientExtensionResults().prf
       if (prf && prf?.results) {
         const { first, second } = prf.results
-        if (first && second) {
-          return concat([rawId, first, second])
-        }
+        if (first && second) return concat([rawId, first, second])
       }
     }
     return false
@@ -231,17 +274,42 @@ async function deriveDeviceEntropy(signal) {
   }
 }
 
-// in-browser-testing-libs.js
-globalThis.hardware = dist_exports
-var nameInput = document.getElementById('name')
+// in-browser-testing-lib.ts
+Object.assign(globalThis, { hardware: dist_exports })
+var credentialNameInput = document.getElementById('credential-name')
 var createButton = document.getElementById('create')
 var deriveButton = document.getElementById('derive')
+var status = document.getElementById('status')
+var bindingExplanation = document.getElementById('binding-explanation')
 var resultOutput = document.getElementById('result')
+var storageExplanations = {
+  'device-bound':
+    'The credential backing this entropy stays on this device and cannot be synced.',
+  'sync-eligible':
+    'The credential backing this entropy can be synced, but is not currently backed up.',
+  synced:
+    'The credential backing this entropy is backed up and may be available on your other devices.',
+  unknown:
+    'The browser did not reveal whether the credential backing this entropy is device-bound or synced.',
+}
 createButton.addEventListener('click', async () => {
-  void (await createDeviceBinding(nameInput.value ?? ''))
+  status.textContent = 'Waiting for the authenticator\u2026'
+  const [created, storage] = await createDeviceBinding(
+    credentialNameInput.value
+  )
+  status.textContent = created
+    ? 'Device binding created.'
+    : 'Device binding could not be created.'
+  bindingExplanation.textContent = storageExplanations[storage]
 })
 deriveButton.addEventListener('click', async () => {
-  const result = await deriveDeviceEntropy()
-  console.log(result)
-  resultOutput.textContent = toBase64UrlString(result)
+  status.textContent = 'Waiting for the authenticator\u2026'
+  const entropy = await deriveDeviceEntropy()
+  if (entropy === false) {
+    status.textContent = 'Entropy could not be derived.'
+    resultOutput.textContent = 'Not available.'
+    return
+  }
+  status.textContent = 'Entropy derived.'
+  resultOutput.textContent = toBase64UrlString(entropy)
 })

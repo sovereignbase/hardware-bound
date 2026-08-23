@@ -1,7 +1,7 @@
 import { build } from 'esbuild'
 
 build({
-  entryPoints: ['./in-browser-testing-libs.js'],
+  entryPoints: ['./in-browser-testing-lib.ts'],
   outfile: './index.js',
   bundle: true,
   external: ['node:*'],

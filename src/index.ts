@@ -1,4 +1,7 @@
 import { concat, fromString, toBufferSource } from '@sovereignbase/bytecodec'
+import type { DeviceBindingStorage } from './.types/DeviceBindingStorage/type.js'
+
+export type { DeviceBindingStorage } from './.types/DeviceBindingStorage/type.js'
 
 const timeout = 60_000
 const mediation: CredentialRequestOptions['mediation'] = 'required'
@@ -19,21 +22,21 @@ const prfInput2: BufferSource = toBufferSource(
  * user verification, and evaluates two fixed PRF inputs that can later be used
  * to derive deterministic entropy with {@link deriveDeviceEntropy}.
  *
- * @param usersDisplayName Human-readable name stored in the created credential.
+ * @param credentialName Human-readable name stored in the created credential.
  * @param signal An optional abort signal that can be used to cancel the request.
- * @returns A promise that resolves to `true` when the credential is created, or
- * `false` when creation fails or is cancelled.
+ * @returns A promise that resolves to a pair containing the creation status and
+ * the credential storage signal. Failures return `[false, 'unknown']`.
  */
 export async function createDeviceBinding(
-  usersDisplayName: string,
+  credentialName: string,
   signal?: AbortSignal
-): Promise<boolean> {
+): Promise<[created: boolean, storage: DeviceBindingStorage]> {
   const publicKey: PublicKeyCredentialCreationOptions = {
     rp: { id: window.location.hostname, name: window.location.host },
     user: {
       id: crypto.getRandomValues(new Uint8Array(32)),
-      name: usersDisplayName,
-      displayName: usersDisplayName,
+      name: credentialName,
+      displayName: credentialName,
     },
     challenge: crypto.getRandomValues(new Uint8Array(32)),
     pubKeyCredParams: [
@@ -57,11 +60,36 @@ export async function createDeviceBinding(
     },
   }
 
+  let credential: PublicKeyCredential | null
   try {
-    await navigator.credentials.create({ publicKey, signal })
-    return true
+    credential = (await navigator.credentials.create({
+      publicKey,
+      signal,
+    })) as PublicKeyCredential | null
   } catch {
-    return false
+    return [false, 'unknown']
+  }
+
+  if (!credential) return [false, 'unknown']
+
+  try {
+    const response = credential.response as AuthenticatorAttestationResponse
+    if (!response || typeof response.getAuthenticatorData !== 'function') {
+      return [true, 'unknown']
+    }
+
+    const authenticatorData = new Uint8Array(response.getAuthenticatorData())
+    if (authenticatorData.length < 33) return [true, 'unknown']
+
+    const flags = authenticatorData[32]
+    const backupEligible = (flags & 0x08) !== 0
+    const backedUp = (flags & 0x10) !== 0
+
+    if (!backupEligible && backedUp) return [true, 'unknown']
+    if (!backupEligible) return [true, 'device-bound']
+    return [true, backedUp ? 'synced' : 'sync-eligible']
+  } catch {
+    return [true, 'unknown']
   }
 }
 

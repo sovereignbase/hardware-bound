@@ -66,12 +66,29 @@ var HardwareBoundBundle = (() => {
     }
     return table
   })()
+  var BASE45_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
+  var BASE45_VALUES = (() => {
+    const table = new Int16Array(128).fill(-1)
+    for (let i = 0; i < BASE45_CHARS.length; i++) {
+      table[BASE45_CHARS.charCodeAt(i)] = i
+    }
+    return table
+  })()
   var Z85_CHARS =
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#'
   var Z85_VALUES = (() => {
     const table = new Int16Array(128).fill(-1)
     for (let i = 0; i < Z85_CHARS.length; i++) {
       table[Z85_CHARS.charCodeAt(i)] = i
+    }
+    return table
+  })()
+  var BASE58BTC_CHARS =
+    '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+  var BASE58BTC_VALUES = (() => {
+    const table = new Int16Array(128).fill(-1)
+    for (let i = 0; i < BASE58BTC_CHARS.length; i++) {
+      table[BASE58BTC_CHARS.charCodeAt(i)] = i
     }
     return table
   })()
@@ -157,18 +174,27 @@ var HardwareBoundBundle = (() => {
   var prfInput2 = toBufferSource(
     fromString('INFO:ENTROPY_FROM_SECOND_PRF_RESULT')
   )
-  async function createDeviceBinding(usersDisplayName, signal) {
+  async function createDeviceBinding(credentialName, signal) {
     const publicKey = {
-      rp: { id: window.location.hostname, name: window.location.host },
-      user: {
-        id: crypto.getRandomValues(new Uint8Array(32)),
-        name: usersDisplayName,
-        displayName: usersDisplayName,
+      rp: {
+        id: window.location.hostname,
+        name: window.location.host,
       },
-      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      user: {
+        id: crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(32)),
+        name: credentialName,
+        displayName: credentialName,
+      },
+      challenge: crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(32)),
       pubKeyCredParams: [
-        { type: 'public-key', alg: -7 },
-        { type: 'public-key', alg: -257 },
+        {
+          type: 'public-key',
+          alg: -7,
+        },
+        {
+          type: 'public-key',
+          alg: -257,
+        },
       ],
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
@@ -186,11 +212,30 @@ var HardwareBoundBundle = (() => {
         },
       },
     }
+    let credential
     try {
-      await navigator.credentials.create({ publicKey, signal })
-      return true
+      credential = await navigator.credentials.create({
+        publicKey,
+        signal,
+      })
     } catch {
-      return false
+      return [false, 'unknown']
+    }
+    if (!credential) return [false, 'unknown']
+    try {
+      const response = credential.response
+      if (!response || typeof response.getAuthenticatorData !== 'function')
+        return [true, 'unknown']
+      const authenticatorData = new Uint8Array(response.getAuthenticatorData())
+      if (authenticatorData.length < 33) return [true, 'unknown']
+      const flags = authenticatorData[32]
+      const backupEligible = (flags & 8) !== 0
+      const backedUp = (flags & 16) !== 0
+      if (!backupEligible && backedUp) return [true, 'unknown']
+      if (!backupEligible) return [true, 'device-bound']
+      return [true, backedUp ? 'synced' : 'sync-eligible']
+    } catch {
+      return [true, 'unknown']
     }
   }
   async function deriveDeviceEntropy(signal) {
@@ -198,7 +243,7 @@ var HardwareBoundBundle = (() => {
       const credential = await navigator.credentials.get({
         publicKey: {
           rpId: window.location.hostname,
-          challenge: crypto.getRandomValues(new Uint8Array(32)),
+          challenge: crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(32)),
           allowCredentials: [],
           userVerification,
           timeout,
@@ -220,9 +265,7 @@ var HardwareBoundBundle = (() => {
         const prf = credential.getClientExtensionResults().prf
         if (prf && prf?.results) {
           const { first, second } = prf.results
-          if (first && second) {
-            return concat([rawId, first, second])
-          }
+          if (first && second) return concat([rawId, first, second])
         }
       }
       return false

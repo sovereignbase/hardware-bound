@@ -1,4 +1,5 @@
 [![npm version](https://img.shields.io/npm/v/@sovereignbase/hardware-bound)](https://www.npmjs.com/package/@sovereignbase/hardware-bound)
+[![JSR](https://jsr.io/badges/@sovereignbase/hardware-bound)](https://jsr.io/@sovereignbase/hardware-bound)
 [![CI](https://github.com/sovereignbase/hardware-bound/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/sovereignbase/hardware-bound/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/sovereignbase/hardware-bound/branch/master/graph/badge.svg)](https://codecov.io/gh/sovereignbase/hardware-bound)
 [![license](https://img.shields.io/npm/l/@sovereignbase/hardware-bound)](LICENSE)
@@ -9,7 +10,7 @@ Creates a device-bound browser credential and derives stable entropy bytes from 
 
 The public API is intentionally tiny:
 
-- `createDeviceBinding(displayName)`
+- `createDeviceBinding(credentialName)`
 - `deriveDeviceEntropy()`
 
 ## Installation
@@ -36,8 +37,10 @@ import {
   deriveDeviceEntropy,
 } from '@sovereignbase/hardware-bound'
 
-const created = await createDeviceBinding('Ada Lovelace')
+const [created, storage] = await createDeviceBinding('Ada Lovelace')
 if (!created) throw new Error('Device binding failed')
+
+console.log(storage)
 
 const entropy = await deriveDeviceEntropy()
 if (!entropy) throw new Error('Entropy derivation failed')
@@ -47,9 +50,28 @@ console.log(entropy)
 
 ## API
 
-### `createDeviceBinding(displayName, signal?)`
+### `createDeviceBinding(credentialName, signal?)`
 
-Creates a device binding for the current origin and returns `true` on success or `false` on failure.
+Creates a device binding for the current origin and returns a pair:
+
+```ts
+[created: boolean, storage: DeviceBindingStorage]
+```
+
+`storage` is one of:
+
+- `device-bound`: the authenticator reports a single-device credential that is
+  not eligible for backup.
+- `sync-eligible`: the credential is eligible for backup but is not currently
+  reported as backed up.
+- `synced`: the credential is eligible for backup and currently reported as
+  backed up.
+- `unknown`: the browser did not expose usable authenticator data, the flags
+  were inconsistent, or creation failed.
+
+The storage signal describes WebAuthn credential backup eligibility and state.
+It does not attest whether key material is protected by software, a TEE, or a
+secure element.
 
 ### `deriveDeviceEntropy(signal?)`
 
@@ -73,7 +95,7 @@ The returned bytes are:
 
 ## Tests
 
-- Unit and integration tests in Node.
+- Unit and integration tests in Vitest.
 - Browser tests in Playwright.
 - Browser matrix: Chromium, Firefox, WebKit, Pixel 5 emulation, iPhone 12 emulation.
 

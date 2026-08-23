@@ -134,10 +134,23 @@
       }
 
       .result-label {
+        margin: 0;
         font-size: 0.78rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.6);
+      }
+
+      .result-explanation {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.76);
+        line-height: 1.5;
+      }
+
+      .entropy-label {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 700;
       }
 
       output {
@@ -197,9 +210,13 @@
         </p>
 
         <div class="controls">
-          <label for="name">
-            Display name
-            <input id="name" type="text" placeholder="Ada Lovelace" />
+          <label for="credential-name">
+            Credential name
+            <input
+              id="credential-name"
+              type="text"
+              placeholder="Ada Lovelace"
+            />
           </label>
 
           <div class="actions">
@@ -209,9 +226,16 @@
             </button>
           </div>
 
+          <p id="status" class="status" aria-live="polite"></p>
 
           <div class="result">
-            <span class="result-label">Entropy</span>
+            <h2 class="result-label">Result</h2>
+            <p id="binding-explanation" class="result-explanation">
+              The entropy is reproduced from the credential identifier and two
+              WebAuthn PRF outputs. Create a device binding to see whether its
+              backing credential is device-bound or synced.
+            </p>
+            <span class="entropy-label">Entropy</span>
             <output id="result">Not derived yet.</output>
           </div>
         </div>

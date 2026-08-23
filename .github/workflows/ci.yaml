@@ -10,7 +10,36 @@ env:
   HUSKY: 0
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref_name || github.sha }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+      - run: npm run format
+
+      - name: Commit formatted files
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "style: format files"
+          git push
+
   test:
+    needs: format
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,6 +47,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref_name || github.sha }}
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
@@ -41,10 +72,6 @@ jobs:
           files: coverage/lcov.info
           fail_ci_if_error: true
 
-      - name: Enforce formatting
-        run: |
-          npm run format
-
   release-please:
     if: github.event_name == 'push'
     needs: test
@@ -56,20 +83,21 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
       - id: release
-        uses: googleapis/release-please-action@v3
+        uses: googleapis/release-please-action@v4
         with:
           release-type: node
-          package-name: '@sovereignbase/hardware-bound'
 
   publish:
     if: needs.release-please.outputs.release_created == 'true'
     needs: release-please
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-node@v6
         with:
@@ -86,5 +114,14 @@ jobs:
         run: |
           node -e "const fs=require('node:fs'); const pkg=JSON.parse(fs.readFileSync('package.json','utf8')); const jsr=JSON.parse(fs.readFileSync('jsr.json','utf8')); jsr.version=pkg.version; fs.writeFileSync('jsr.json', JSON.stringify(jsr, null, 2) + '\n');"
 
+      - name: Commit JSR version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jsr.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: sync JSR version"
+          git push
+
       - name: Publish to JSR
-        run: npx jsr publish --allow-dirty
+        run: npx jsr publish

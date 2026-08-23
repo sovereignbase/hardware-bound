@@ -19,7 +19,16 @@ const installMocks = () => {
 
   const create = async (options) => {
     state.lastCreateOptions = options
-    return { type: 'public-key' }
+    return {
+      type: 'public-key',
+      response: {
+        getAuthenticatorData() {
+          const bytes = new Uint8Array(37)
+          bytes[32] = 0x05
+          return bytes.buffer
+        },
+      },
+    }
   }
 
   const get = async (options) => {
@@ -72,12 +81,14 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/')
 })
 
-test('createDeviceBinding works in browsers', async ({ page }) => {
-  const ok = await page.evaluate(async () => {
+test('createDeviceBinding returns its storage signal in browsers', async ({
+  page,
+}) => {
+  const result = await page.evaluate(async () => {
     return globalThis.hardwareBound.createDeviceBinding('Alice')
   })
 
-  expect(ok).toBe(true)
+  expect(result).toEqual([true, 'device-bound'])
 
   const details = await page.evaluate(() => {
     const { publicKey } = globalThis.__hardwareBoundState.lastCreateOptions
@@ -85,7 +96,7 @@ test('createDeviceBinding works in browsers', async ({ page }) => {
       rpId: publicKey.rp.id,
       rpName: publicKey.rp.name,
       userName: publicKey.user.name,
-      userDisplayName: publicKey.user.displayName,
+      credentialName: publicKey.user.displayName,
       userIdLength: publicKey.user.id.byteLength ?? publicKey.user.id.length,
       challengeLength:
         publicKey.challenge.byteLength ?? publicKey.challenge.length,
@@ -103,7 +114,7 @@ test('createDeviceBinding works in browsers', async ({ page }) => {
   expect(details.rpId).toBeTruthy()
   expect(details.rpName).toBeTruthy()
   expect(details.userName).toBe('Alice')
-  expect(details.userDisplayName).toBe('Alice')
+  expect(details.credentialName).toBe('Alice')
   expect(details.userIdLength).toBe(32)
   expect(details.challengeLength).toBe(32)
   expect(details.attachment).toBe('platform')
