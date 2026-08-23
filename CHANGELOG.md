@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0](https://github.com/sovereignbase/hardware-bound/compare/v1.0.0...v2.0.0) (2026-08-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* expose credential storage state
+* createDeviceBinding now resolves to a [created, storage] tuple instead of a boolean.
+
+### Features
+
+* expose credential storage state ([7179de0](https://github.com/sovereignbase/hardware-bound/commit/7179de0855e8606be0f373f0a486461382c2ddee))
+* expose credential storage state ([3e80ab7](https://github.com/sovereignbase/hardware-bound/commit/3e80ab79ff7e805ba36ad59b131960907bdf6565))
+
 ## 1.0.0 (2026-04-04)
 
 
