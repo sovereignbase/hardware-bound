@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/sovereignbase/hardware-bound/compare/v2.0.1...v2.0.2) (2026-09-12)
+
+
+### Bug Fixes
+
+* bumb deps and use new bytecodec api ([5d02baf](https://github.com/sovereignbase/hardware-bound/commit/5d02bafc0b097eeb043e7a2266675e899df6a880))
+
 ## [2.0.1](https://github.com/sovereignbase/hardware-bound/compare/v2.0.0...v2.0.1) (2026-08-23)
 
 
