@@ -1,4 +1,4 @@
-import { concat, fromString, toBufferSource } from '@sovereignbase/bytecodec'
+import { Bytes } from '@sovereignbase/bytecodec'
 import type { DeviceBindingStorage } from './.types/DeviceBindingStorage/type.js'
 
 export type { DeviceBindingStorage } from './.types/DeviceBindingStorage/type.js'
@@ -8,12 +8,13 @@ const mediation: CredentialRequestOptions['mediation'] = 'required'
 const userVerification: AuthenticatorSelectionCriteria['userVerification'] =
   'required'
 
-const prfInput1: BufferSource = toBufferSource(
-  fromString('INFO:ENTROPY_FROM_FIRST_PRF_RESULT')
-)
-const prfInput2: BufferSource = toBufferSource(
-  fromString('INFO:ENTROPY_FROM_SECOND_PRF_RESULT')
-)
+const prfInput1: BufferSource = Bytes.utf8.decode(
+  'INFO:ENTROPY_FROM_FIRST_PRF_RESULT'
+) as BufferSource
+
+const prfInput2: BufferSource = Bytes.utf8.decode(
+  'INFO:ENTROPY_FROM_SECOND_PRF_RESULT'
+) as BufferSource
 
 /**
  * Creates a device-bound credential for the current origin.
@@ -134,7 +135,7 @@ export async function deriveDeviceEntropy(
       if (prf && prf?.results) {
         const { first, second } = prf.results
         if (first && second) {
-          return concat([rawId, first, second])
+          return Bytes.concat([rawId, first, second])
         }
       }
     }

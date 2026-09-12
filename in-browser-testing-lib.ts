@@ -1,4 +1,4 @@
-import { toBase64UrlString } from '@sovereignbase/bytecodec'
+import { Bytes } from '@sovereignbase/bytecodec'
 import * as hardware from './dist/index.js'
 import type { DeviceBindingStorage } from './dist/index.js'
 
@@ -48,5 +48,5 @@ deriveButton.addEventListener('click', async () => {
   }
 
   status.textContent = 'Entropy derived.'
-  resultOutput.textContent = toBase64UrlString(entropy)
+  resultOutput.textContent = Bytes.base64url.encode(entropy)
 })
