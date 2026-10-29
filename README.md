@@ -146,6 +146,28 @@ Invalidation is best-effort. The browser or credential provider may remove or hi
 - **Error handling:** Credential creation and access return failure values for unsuccessful credential requests. Unexpected failures are wrapped in `DeviceBoundError` with the `UNKNOWN_ERROR` code and the original cause.
 - **Scope:** Intended for bootstrapping local cryptographic state, not as a general-purpose authentication library.
 
+## Tests
+
+Vitest: 55 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
+
+### Coverage
+
+| Statements | Branches | Functions | Lines |
+| ---------- | -------- | --------- | ----- |
+| 100%       | 100%     | 100%      | 100%  |
+
+### Browser compatibility
+
+| Browser                             | Result  | Passed | Failed | Flaky | Skipped |
+| ----------------------------------- | ------- | ------ | ------ | ----- | ------- |
+| Chromium                            | Passed  | 17     | 0      | 0     | 0       |
+| Firefox                             | Not run | 0      | 0      | 0     | 0       |
+| WebKit                              | Passed  | 17     | 0      | 0     | 0       |
+| Mobile Chrome (Pixel 5 emulation)   | Passed  | 17     | 0      | 0     | 0       |
+| Mobile Safari (iPhone 12 emulation) | Passed  | 17     | 0      | 0     | 0       |
+
+Browser checks use mocked WebAuthn responses.
+
 ## License
 
 Apache-2.0

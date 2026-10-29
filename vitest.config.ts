@@ -6,6 +6,8 @@ export default defineConfig({
     include: ['test/unit/**/*.test.ts', 'test/integration/**/*.test.ts'],
     environment: 'node',
     fileParallelism: false,
+    reporters: ['default', 'json'],
+    outputFile: { json: 'test/.results/vitest.json' },
     coverage: {
       enabled: true,
       provider: 'v8',

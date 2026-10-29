@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: 'test/compatibility/browsers',
   testMatch: '**/*.spec.ts',
   timeout: 30000,
+  reporter: [['list'], ['json', { outputFile: 'test/.results/browsers.json' }]],
   use: {
     baseURL: 'http://127.0.0.1:4173',
   },

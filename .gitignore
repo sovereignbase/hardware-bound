@@ -13,6 +13,7 @@ lerna-debug.log*
 coverage/
 .nyc_output/
 test-results/
+test/.results/
 playwright-report/
 test/compatibility/browsers/fixtures/*.bundle.js
 
