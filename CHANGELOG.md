@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0](https://github.com/sovereignbase/hardware-bound/compare/v3.0.0...v3.1.0) (2026-10-29)
+
+
+### Features
+
+* return credential IDs and support targeted binding access ([69fe727](https://github.com/sovereignbase/hardware-bound/commit/69fe727ca92dcfe27448e9c11ac6b67fe9278d18))
+* return credential IDs and support targeted binding access ([07ca1d7](https://github.com/sovereignbase/hardware-bound/commit/07ca1d76ae65550999149a793d5968d8aca1aef3)), closes [#7](https://github.com/sovereignbase/hardware-bound/issues/7)
+
 ## [3.0.0](https://github.com/sovereignbase/hardware-bound/compare/v2.0.2...v3.0.0) (2026-10-29)
 
 
