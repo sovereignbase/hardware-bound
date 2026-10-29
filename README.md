@@ -33,15 +33,16 @@ import {
   invalidateDeviceBinding,
 } from '@sovereignbase/hardware-bound'
 
-const [created, bindingStorage] = await createDeviceBinding('Ada Lovelace')
+const created = await createDeviceBinding('Ada Lovelace')
 if (!created) throw new Error('Device binding creation failed')
 
+const [credentialId, bindingStorage] = created
 console.log(bindingStorage)
 
-const binding = await accessDeviceBinding()
+const binding = await accessDeviceBinding(credentialId)
 if (!binding) throw new Error('Device binding access failed')
 
-const [credentialId, entropy] = binding
+const [, entropy] = binding
 
 console.log(credentialId, entropy)
 
@@ -59,7 +60,7 @@ Creates a device binding for the current origin.
 createDeviceBinding(
   credentialName: string,
   signal?: AbortSignal
-): Promise<[created: boolean, bindingStorage: DeviceBindingStorage]>
+): Promise<false | [credentialId: string, bindingStorage: DeviceBindingStorage]>
 ```
 
 **Parameters**
@@ -69,7 +70,7 @@ createDeviceBinding(
 
 **Returns**
 
-A tuple containing the creation status and binding storage characteristics.
+A tuple containing the Base64URL-encoded credential identifier and binding storage characteristics, or `false` if creation fails.
 
 `bindingStorage` is one of:
 
@@ -80,31 +81,29 @@ A tuple containing the creation status and binding storage characteristics.
 
 The storage classification reflects the credential's reported backup state, not whether its private key is hardware-protected.
 
-Returns `[false, 'unknown']` if credential creation fails or the required PRF functionality is unavailable.
+Returns `false` if credential creation fails or the required PRF functionality is unavailable.
 
-### `accessDeviceBinding(signal?)`
+### `accessDeviceBinding(credentialId?, signal?)`
 
 Accesses an existing device binding.
 
 ```ts
 accessDeviceBinding(
+  credentialId?: string,
   signal?: AbortSignal
-): Promise<DeviceBinding | false>
+): Promise<false | [credentialId: string, entropy: Uint8Array]>
 ```
 
 **Parameters**
 
+- `credentialId`: An optional Base64URL-encoded credential identifier. When provided, only that credential can be selected. When omitted, the browser can select an available discoverable credential for the current origin.
 - `signal`: An optional `AbortSignal` used to cancel the operation.
 
 **Returns**
 
-A tuple containing the credential identifier and its associated entropy:
+A tuple containing the credential identifier and its associated entropy, or `false` if access fails.
 
-```ts
-type DeviceBinding = [id: string, entropy: Uint8Array]
-```
-
-- `id`: The Base64URL-encoded credential identifier.
+- `credentialId`: The Base64URL-encoded credential identifier.
 - `entropy`: Stable entropy bytes associated with the credential.
 
 The entropy consists of the concatenation of:
@@ -116,6 +115,7 @@ The entropy consists of the concatenation of:
 Accessing the same credential with the same PRF inputs produces the same entropy, allowing applications to reconstruct cryptographic state without persisting the entropy themselves.
 
 Returns `false` if the credential cannot be accessed or the required PRF outputs are unavailable.
+If the requested credential is unavailable, access does not fall back to another credential.
 
 ### `invalidateDeviceBinding(credentialId)`
 
@@ -148,7 +148,7 @@ Invalidation is best-effort. The browser or credential provider may remove or hi
 
 ## Tests
 
-Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
+Vitest: 57 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
 
 ### Coverage
 
@@ -158,22 +158,22 @@ Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
 
 ### Browser wrapper tests
 
-| Browser                             | Result | Passed | Failed | Flaky | Skipped |
-| ----------------------------------- | ------ | ------ | ------ | ----- | ------- |
-| Chromium                            | Passed | 5      | 0      | 0     | 0       |
-| Firefox                             | Passed | 5      | 0      | 0     | 0       |
-| WebKit                              | Passed | 5      | 0      | 0     | 0       |
-| Mobile Chrome (Pixel 5 emulation)   | Passed | 5      | 0      | 0     | 0       |
-| Mobile Safari (iPhone 12 emulation) | Passed | 5      | 0      | 0     | 0       |
+| Browser                             | Result  | Passed | Failed | Flaky | Skipped |
+| ----------------------------------- | ------- | ------ | ------ | ----- | ------- |
+| Chromium                            | Passed  | 7      | 0      | 0     | 0       |
+| Firefox                             | Not run | 0      | 0      | 0     | 0       |
+| WebKit                              | Passed  | 7      | 0      | 0     | 0       |
+| Mobile Chrome (Pixel 5 emulation)   | Passed  | 7      | 0      | 0     | 0       |
+| Mobile Safari (iPhone 12 emulation) | Passed  | 7      | 0      | 0     | 0       |
 
 ### Native WebAuthn and PRF
 
 | Browser                             | Result  | Passed | Failed | Flaky | Skipped |
 | ----------------------------------- | ------- | ------ | ------ | ----- | ------- |
-| Chromium                            | Passed  | 6      | 0      | 0     | 0       |
+| Chromium                            | Passed  | 7      | 0      | 0     | 0       |
 | Firefox                             | Not run | 0      | 0      | 0     | 0       |
 | WebKit                              | Not run | 0      | 0      | 0     | 0       |
-| Mobile Chrome (Pixel 5 emulation)   | Passed  | 6      | 0      | 0     | 0       |
+| Mobile Chrome (Pixel 5 emulation)   | Passed  | 7      | 0      | 0     | 0       |
 | Mobile Safari (iPhone 12 emulation) | Not run | 0      | 0      | 0     | 0       |
 
 Wrapper tests use Playwright’s `context.credentials` mock, which currently returns no PRF extension results. They verify rejection of credentials without PRF support and unavailable credentials. Successful PRF operations use native browser virtual authenticators with automatic user verification.

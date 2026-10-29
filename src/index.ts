@@ -14,20 +14,16 @@ export type DeviceBindingStorage =
   /** The credential's storage characteristics could not be determined. */
   | 'unknown'
 
-/**
- * Represents a device binding and its associated entropy.
- */
-
 const timeout = 60_000
 const mediation: CredentialRequestOptions['mediation'] = 'required'
 const userVerification: AuthenticatorSelectionCriteria['userVerification'] =
   'required'
 
-const prfInput1: BufferSource = Bytes.utf8.decode(
+const first: BufferSource = Bytes.utf8.decode(
   'INFO:ENTROPY_FROM_FIRST_PRF_RESULT'
 ) as BufferSource
 
-const prfInput2: BufferSource = Bytes.utf8.decode(
+const second: BufferSource = Bytes.utf8.decode(
   'INFO:ENTROPY_FROM_SECOND_PRF_RESULT'
 ) as BufferSource
 
@@ -42,7 +38,9 @@ const prfInput2: BufferSource = Bytes.utf8.decode(
 export async function createDeviceBinding(
   credentialName: string,
   signal?: AbortSignal
-): Promise<false | [id: string, bindingStorage: DeviceBindingStorage]> {
+): Promise<
+  false | [credentialId: string, bindingStorage: DeviceBindingStorage]
+> {
   try {
     const publicKey: PublicKeyCredentialCreationOptions = {
       rp: { id: window.location.hostname, name: window.location.host },
@@ -59,15 +57,15 @@ export async function createDeviceBinding(
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
         residentKey: 'required',
-        userVerification: userVerification,
+        userVerification,
       },
-      timeout: timeout,
+      timeout,
       attestation: 'none',
       extensions: {
         prf: {
           eval: {
-            first: prfInput1,
-            second: prfInput2,
+            first,
+            second,
           },
         },
       },
@@ -121,15 +119,15 @@ export async function createDeviceBinding(
 /**
  * Accesses an existing device binding.
  *
- * @param id An optional credential identifier used to restrict credential selection.
+ * @param credentialId An optional credential identifier used to restrict credential selection.
  * @param signal An optional signal used to abort the operation.
  * @returns The credential identifier and associated entropy, or `false`
  * if the binding cannot be accessed.
  */
 export async function accessDeviceBinding(
-  id?: string,
+  credentialId?: string,
   signal?: AbortSignal
-): Promise<false | [id: string, entropy: Uint8Array]> {
+): Promise<false | [credentialId: string, entropy: Uint8Array]> {
   try {
     let credential: PublicKeyCredential | null
     try {
@@ -138,26 +136,26 @@ export async function accessDeviceBinding(
           rpId: window.location.hostname,
           challenge: crypto.getRandomValues(new Uint8Array(32)),
           allowCredentials:
-            typeof id === 'string'
+            typeof credentialId === 'string'
               ? [
                   {
-                    id: Bytes.base64url.decode(id) as BufferSource,
+                    id: Bytes.base64url.decode(credentialId) as BufferSource,
                     type: 'public-key',
                   },
                 ]
               : [],
-          userVerification: userVerification,
-          timeout: timeout,
+          userVerification,
+          timeout,
           extensions: {
             prf: {
               eval: {
-                first: prfInput1,
-                second: prfInput2,
+                first,
+                second,
               },
             },
           },
         },
-        mediation: mediation,
+        mediation,
         signal,
       })) as PublicKeyCredential | null
     } catch {

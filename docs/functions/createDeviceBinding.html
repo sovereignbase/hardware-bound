@@ -110,12 +110,15 @@
                   >)</span
                 ><span class="tsd-signature-symbol">:</span>
                 <span class="tsd-signature-type">Promise</span
-                ><span class="tsd-signature-symbol">&lt;</span
-                ><span class="tsd-signature-symbol">[</span>created<span
+                ><span class="tsd-signature-symbol">&lt;</span><br />    <span
+                  class="tsd-signature-type"
+                  >false</span
+                ><br />    <span class="tsd-signature-symbol">|</span>
+                <span class="tsd-signature-symbol">[</span>credentialId<span
                   class="tsd-signature-symbol"
                   >:</span
                 >
-                <span class="tsd-signature-type">boolean</span
+                <span class="tsd-signature-type">string</span
                 ><span class="tsd-signature-symbol">,</span> bindingStorage<span
                   class="tsd-signature-symbol"
                   >:</span
@@ -125,7 +128,9 @@
                   class="tsd-signature-type tsd-kind-type-alias"
                   >DeviceBindingStorage</a
                 ><span class="tsd-signature-symbol">]</span
-                ><span class="tsd-signature-symbol">&gt;</span
+                ><span class="tsd-signature-symbol">,</span><br /><span
+                  class="tsd-signature-symbol"
+                  >&gt;</span
                 ><a
                   href="#createdevicebinding"
                   aria-label="Permalink"
@@ -167,11 +172,13 @@
                 <h4 class="tsd-returns-title">
                   Returns <span class="tsd-signature-type">Promise</span
                   ><span class="tsd-signature-symbol">&lt;</span
-                  ><span class="tsd-signature-symbol">[</span>created<span
+                  ><span class="tsd-signature-type">false</span>
+                  <span class="tsd-signature-symbol">|</span>
+                  <span class="tsd-signature-symbol">[</span>credentialId<span
                     class="tsd-signature-symbol"
                     >:</span
                   >
-                  <span class="tsd-signature-type">boolean</span
+                  <span class="tsd-signature-type">string</span
                   ><span class="tsd-signature-symbol">,</span>
                   bindingStorage<span class="tsd-signature-symbol">:</span>
                   <a
@@ -182,16 +189,16 @@
                   ><span class="tsd-signature-symbol">&gt;</span>
                 </h4>
                 <p>
-                  The creation status and binding storage characteristics, or
-                  <code>[false, 'unknown']</code> if creation fails.
+                  The credential identifier and binding storage characteristics,
+                  or <code>false</code> if creation fails.
                 </p>
                 <aside class="tsd-sources">
                   <ul>
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/sovereignbase/hardware-bound/blob/446e37b921b69602e33575f03b29197e4fc8f8df/src/index.ts#L43"
-                        >index.ts:43</a
+                        href="https://github.com/sovereignbase/hardware-bound/blob/192ed2156c0951b691ebb6580ad582e4960a5315/src/index.ts#L38"
+                        >index.ts:38</a
                       >
                     </li>
                   </ul>

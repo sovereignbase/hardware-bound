@@ -45,10 +45,13 @@ test('native WebAuthn creates, accesses and invalidates a PRF binding', async ({
       'Native test',
       AbortSignal.timeout(5000)
     )
+    if (!created) throw new Error('Expected a native PRF binding')
     const first = await hardwareBound.accessDeviceBinding(
+      created[0],
       AbortSignal.timeout(5000)
     )
     const second = await hardwareBound.accessDeviceBinding(
+      undefined,
       AbortSignal.timeout(5000)
     )
     if (!first || !second) throw new Error('Expected a native PRF binding')
@@ -60,7 +63,7 @@ test('native WebAuthn creates, accesses and invalidates a PRF binding', async ({
       entropyLength: first[1].length,
     }
   })
-  expect(result.created).toEqual([true, 'non-extractable'])
+  expect(result.created).toEqual([result.first[0], 'non-extractable'])
   expect(result.entropyLength).toBe(96)
   expect(result.first).toEqual(result.second)
   const { credentials } = await session.send('WebAuthn.getCredentials', {
@@ -86,7 +89,7 @@ for (const [eligible, backedUp, storage] of [
           AbortSignal.timeout(5000)
         )
       )
-    ).toEqual([true, storage])
+    ).toEqual([expect.any(String), storage])
   })
 }
 
@@ -100,7 +103,7 @@ test('native WebAuthn rejects and invalidates a credential without PRF', async (
     await page.evaluate(() =>
       hardwareBound.createDeviceBinding('No PRF', AbortSignal.timeout(5000))
     )
-  ).toEqual([false, 'unknown'])
+  ).toBe(false)
   const { credentials } = await session.send('WebAuthn.getCredentials', {
     authenticatorId,
   })
@@ -119,12 +122,64 @@ test('native WebAuthn respects cancelled credential requests', async ({
         'Cancelled',
         controller.signal
       ),
-      accessed: await hardwareBound.accessDeviceBinding(controller.signal),
+      accessed: await hardwareBound.accessDeviceBinding(
+        undefined,
+        controller.signal
+      ),
     }
   })
-  expect(result).toEqual({ created: [false, 'unknown'], accessed: false })
+  expect(result).toEqual({ created: false, accessed: false })
   const { credentials } = await session.send('WebAuthn.getCredentials', {
     authenticatorId,
   })
   expect(credentials).toHaveLength(0)
+})
+
+test('native WebAuthn selects the requested binding among multiple credentials', async ({
+  page,
+}) => {
+  await openNativePage(page)
+  const result = await page.evaluate(async () => {
+    const first = await hardwareBound.createDeviceBinding(
+      'First binding',
+      AbortSignal.timeout(5000)
+    )
+    const second = await hardwareBound.createDeviceBinding(
+      'Second binding',
+      AbortSignal.timeout(5000)
+    )
+    if (!first || !second) throw new Error('Expected two native PRF bindings')
+    const selected = await hardwareBound.accessDeviceBinding(
+      second[0],
+      AbortSignal.timeout(5000)
+    )
+    const other = await hardwareBound.accessDeviceBinding(
+      first[0],
+      AbortSignal.timeout(5000)
+    )
+    const repeated = await hardwareBound.accessDeviceBinding(
+      second[0],
+      AbortSignal.timeout(5000)
+    )
+    if (!selected || !other || !repeated)
+      throw new Error('Expected access to the requested bindings')
+    const missing = await hardwareBound.accessDeviceBinding(
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+      AbortSignal.timeout(1000)
+    )
+    return {
+      firstId: first[0],
+      secondId: second[0],
+      selected: [selected[0], Array.from(selected[1])],
+      other: [other[0], Array.from(other[1])],
+      repeated: [repeated[0], Array.from(repeated[1])],
+      missing,
+    }
+  })
+  expect(result.firstId).not.toBe(result.secondId)
+  expect(result.selected[0]).toBe(result.secondId)
+  expect(result.other[0]).toBe(result.firstId)
+  expect(result.repeated).toEqual(result.selected)
+  expect(result.other[1]).not.toEqual(result.selected[1])
+  expect(result.missing).toBe(false)
 })

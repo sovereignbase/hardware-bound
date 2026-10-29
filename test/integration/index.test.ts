@@ -74,7 +74,7 @@ describe('createDeviceBinding', () => {
 
     await expect(
       createDeviceBinding('Alice', controller.signal)
-    ).resolves.toEqual([true, 'non-extractable'])
+    ).resolves.toEqual([createdCredential.id, 'non-extractable'])
 
     expect(create).toHaveBeenCalledOnce()
     const options = create.mock.calls[0]![0]
@@ -112,7 +112,10 @@ describe('createDeviceBinding', () => {
     createdCredential.response = {
       getAuthenticatorData: () => authenticatorData(flags),
     }
-    await expect(createDeviceBinding('Alice')).resolves.toEqual([true, storage])
+    await expect(createDeviceBinding('Alice')).resolves.toEqual([
+      createdCredential.id,
+      storage,
+    ])
     expect(create.mock.calls[0]![0].signal).toBeUndefined()
   })
 
@@ -121,7 +124,7 @@ describe('createDeviceBinding', () => {
     async (response) => {
       createdCredential.response = response
       await expect(createDeviceBinding('Alice')).resolves.toEqual([
-        true,
+        createdCredential.id,
         'unknown',
       ])
     }
@@ -132,7 +135,7 @@ describe('createDeviceBinding', () => {
       getAuthenticatorData: () => authenticatorData(0x05, 32),
     }
     await expect(createDeviceBinding('Alice')).resolves.toEqual([
-      true,
+      createdCredential.id,
       'unknown',
     ])
   })
@@ -144,28 +147,22 @@ describe('createDeviceBinding', () => {
       },
     }
     await expect(createDeviceBinding('Alice')).resolves.toEqual([
-      true,
+      createdCredential.id,
       'unknown',
     ])
   })
 
-  test('returns a failure pair when creation returns null', async () => {
+  test('returns false when creation returns null', async () => {
     create.mockResolvedValue(null)
-    await expect(createDeviceBinding('Alice')).resolves.toEqual([
-      false,
-      'unknown',
-    ])
+    await expect(createDeviceBinding('Alice')).resolves.toBe(false)
     expect(signalUnknownCredential).not.toHaveBeenCalled()
   })
 
   test.each(['NotAllowedError', 'AbortError', 'NotSupportedError'])(
-    'returns a failure pair when creation rejects with %s',
+    'returns false when creation rejects with %s',
     async (name) => {
       create.mockRejectedValue(new DOMException('Creation failed', name))
-      await expect(createDeviceBinding('Alice')).resolves.toEqual([
-        false,
-        'unknown',
-      ])
+      await expect(createDeviceBinding('Alice')).resolves.toBe(false)
     }
   )
 
@@ -173,10 +170,7 @@ describe('createDeviceBinding', () => {
     'invalidates credentials without enabled PRF: %j',
     async (extensions) => {
       createdCredential.getClientExtensionResults = () => extensions
-      await expect(createDeviceBinding('Alice')).resolves.toEqual([
-        false,
-        'unknown',
-      ])
+      await expect(createDeviceBinding('Alice')).resolves.toBe(false)
       expect(signalUnknownCredential).toHaveBeenCalledExactlyOnceWith({
         rpId: 'hardware.test',
         credentialId: 'credential-id',
@@ -184,13 +178,10 @@ describe('createDeviceBinding', () => {
     }
   )
 
-  test('returns a failure pair even when best-effort invalidation fails', async () => {
+  test('returns false even when best-effort invalidation fails', async () => {
     createdCredential.getClientExtensionResults = () => ({})
     signalUnknownCredential.mockRejectedValue(new Error('Removal unavailable'))
-    await expect(createDeviceBinding('Alice')).resolves.toEqual([
-      false,
-      'unknown',
-    ])
+    await expect(createDeviceBinding('Alice')).resolves.toBe(false)
     expect(signalUnknownCredential).toHaveBeenCalledOnce()
   })
 
@@ -224,7 +215,7 @@ describe('createDeviceBinding', () => {
 describe('accessDeviceBinding', () => {
   test('returns the credential ID and concatenated raw ID and PRF entropy', async () => {
     const controller = new AbortController()
-    const result = await accessDeviceBinding(controller.signal)
+    const result = await accessDeviceBinding(undefined, controller.signal)
 
     expect(result).toEqual([
       'credential-id',
@@ -262,6 +253,23 @@ describe('accessDeviceBinding', () => {
     expect(get.mock.calls[0]![0].publicKey!.challenge).not.toEqual(
       get.mock.calls[1]![0].publicKey!.challenge
     )
+  })
+
+  test('restricts access to the decoded credential ID and forwards the abort signal', async () => {
+    const id = '-_8A'
+    const controller = new AbortController()
+    accessedCredential.id = id
+
+    await expect(accessDeviceBinding(id, controller.signal)).resolves.toEqual([
+      id,
+      expect.any(Uint8Array),
+    ])
+    expect(get).toHaveBeenCalledOnce()
+    const options = get.mock.calls[0]![0]
+    expect(options.signal).toBe(controller.signal)
+    expect(options.publicKey!.allowCredentials).toEqual([
+      { id: new Uint8Array([0xfb, 0xff, 0x00]), type: 'public-key' },
+    ])
   })
 
   test('returns false when no credential is returned', async () => {
