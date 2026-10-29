@@ -3,18 +3,12 @@
   "license": "Apache-2.0",
   "name": "@sovereignbase/hardware-bound",
   "version": "2.0.2",
-  "description": "Creates a device-bound browser credential and derives stable entropy bytes from it for bootstrapping local cryptographic state.",
+  "description": "Enables device-bound cryptography in the browser through an offline-capable WebAuthn wrapper.",
   "keywords": [
-    "entropy",
-    "device-binding",
-    "hardware-bound",
-    "local-first",
-    "zero-knowledge",
-    "bootstrap",
-    "cryptography",
     "prf",
-    "sovereignbase",
-    "typescript"
+    "webauthn",
+    "device-bound",
+    "cryptography"
   ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -36,27 +30,28 @@
   "sideEffects": false,
   "scripts": {
     "format": "prettier . --write",
-    "build": "npm run build:package && npm run build:demo",
+    "build": "npm run build:package && npm run build:docs",
     "build:package": "tsdown",
-    "build:demo": "node in-browser-testing-build.js",
+    "build:docs": "typedoc",
     "test": "npm run build && npm run test:typecheck && vitest run && node test/e2e/run.mjs",
     "test:typecheck": "tsc --noEmit --project test/tsconfig.json",
     "prepare": "husky",
     "prepublishOnly": "npm run test"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.3",
-    "@commitlint/config-conventional": "^21.2.3",
-    "@playwright/test": "^1.64.0",
-    "@types/node": "^26.6.5",
-    "@vitest/coverage-v8": "^5.0.4",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.0.5",
     "esbuild": "^0.28.2",
     "husky": "^9.1.7",
-    "playwright": "^1.64.0",
+    "playwright": "^1.64.1",
     "prettier": "^3.9.10",
-    "tsdown": "^0.23.1",
+    "tsdown": "^0.23.3",
+    "typedoc": "^0.28.20",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.4"
+    "vitest": "^5.0.5"
   },
   "dependencies": {
     "@sovereignbase/bytecodec": "^2.0.1"
@@ -68,5 +63,8 @@
   "bugs": {
     "url": "https://github.com/sovereignbase/hardware-bound/issues"
   },
-  "homepage": "https://sovereignbase.dev/hardware-bound"
+  "homepage": "https://sovereignbase.dev/hardware-bound",
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
 }
