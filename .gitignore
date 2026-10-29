@@ -13,6 +13,8 @@ lerna-debug.log*
 coverage/
 .nyc_output/
 test-results/
+playwright-report/
+test/compatibility/browsers/fixtures/*.bundle.js
 
 .env
 .env.*.local

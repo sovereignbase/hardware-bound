@@ -2,9 +2,9 @@ import { resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { build } from 'esbuild'
 
-const outDir = resolve(process.cwd(), 'test', 'e2e', 'fixtures')
-const entryFile = resolve(outDir, 'entry.js')
-const bundleFile = resolve(outDir, 'zkcredentials.bundle.js')
+const outDir = resolve(import.meta.dirname, 'fixtures')
+const entryFile = resolve(outDir, 'entry.ts')
+const bundleFile = resolve(outDir, 'hardware-bound.bundle.js')
 
 await build({
   entryPoints: [entryFile],
@@ -26,7 +26,7 @@ const cli = resolve(
 )
 const result = spawnSync(
   process.execPath,
-  [cli, 'test', '--config', 'playwright.config.ts'],
+  [cli, 'test', '--config', 'playwright.config.ts', ...process.argv.slice(2)],
   {
     stdio: 'inherit',
     env: process.env,

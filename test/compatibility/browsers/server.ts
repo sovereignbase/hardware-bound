@@ -1,12 +1,11 @@
 import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
-import { resolve, extname } from 'node:path'
+import { resolve, extname, relative, isAbsolute } from 'node:path'
 
-const rootDir = resolve(process.cwd())
-const indexPath = resolve(rootDir, 'test', 'e2e', 'index.html')
+const rootDir = resolve(import.meta.dirname, '../../..')
 const port = Number(process.env.PORT ?? 4173)
 
-const contentTypes = {
+const contentTypes: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
@@ -23,10 +22,13 @@ const server = createServer(async (req, res) => {
       `http://${req.headers.host ?? '127.0.0.1'}`
     )
     const pathname =
-      url.pathname === '/' ? '/test/e2e/index.html' : url.pathname
+      url.pathname === '/'
+        ? '/test/compatibility/browsers/index.html'
+        : url.pathname
     const filePath = resolve(rootDir, pathname.slice(1))
 
-    if (!filePath.startsWith(rootDir)) {
+    const relativePath = relative(rootDir, filePath)
+    if (relativePath.startsWith('..') || isAbsolute(relativePath)) {
       res.statusCode = 403
       res.end('Forbidden')
       return

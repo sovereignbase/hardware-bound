@@ -1,13 +1,14 @@
 import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
-  testDir: 'test/e2e',
+  testDir: 'test/compatibility/browsers',
+  testMatch: '**/*.spec.ts',
   timeout: 30000,
   use: {
     baseURL: 'http://127.0.0.1:4173',
   },
   webServer: {
-    command: 'node test/e2e/server.mjs',
+    command: 'node test/compatibility/browsers/server.ts',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
   },

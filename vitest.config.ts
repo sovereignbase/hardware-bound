@@ -9,11 +9,11 @@ export default defineConfig({
     coverage: {
       enabled: true,
       provider: 'v8',
-      include: ['dist/**/*.js'],
-      exclude: ['dist/**/*.d.ts'],
-      reporter: ['text', 'lcov'],
+      include: ['src/**/*.ts'],
+      reporter: ['text', 'html', 'lcov', 'json-summary'],
       reportOnFailure: true,
       thresholds: {
+        perFile: true,
         lines: 100,
         branches: 100,
         functions: 100,

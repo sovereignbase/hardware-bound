@@ -33,7 +33,9 @@
     "build": "npm run build:package && npm run build:docs",
     "build:package": "tsdown",
     "build:docs": "typedoc",
-    "test": "npm run build && npm run test:typecheck && vitest run && node test/e2e/run.mjs",
+    "test": "npm run build && npm run test:typecheck && npm run test:coverage && npm run test:browser",
+    "test:coverage": "vitest run --coverage",
+    "test:browser": "node test/compatibility/browsers/run.ts",
     "test:typecheck": "tsc --noEmit --project test/tsconfig.json",
     "prepare": "husky",
     "prepublishOnly": "npm run test"

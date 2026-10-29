@@ -14,64 +14,83 @@
 <a href="https://codecov.io/gh/sovereignbase/hardware-bound"><img src="https://codecov.io/gh/sovereignbase/hardware-bound/branch/master/graph/badge.svg" alt="codecov"></a>
 <a href="LICENSE"><img src="https://img.shields.io/npm/l/@sovereignbase/hardware-bound" alt="license"></a></p>
 <h1 id="hardware-bound" class="tsd-anchor-link">hardware-bound<a href="#hardware-bound" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
-<p>Creates a device-bound browser credential and derives stable entropy bytes from it so local-first and zero-knowledge apps can bootstrap cryptographic state without storing their own seed material.</p>
-<p>The public API is intentionally tiny:</p>
-<ul>
-<li><code>createDeviceBinding(credentialName)</code></li>
-<li><code>deriveDeviceEntropy()</code></li>
-</ul>
+<p>Creates a device-bound browser credential and provides access to stable entropy upon user authentication, enabling reliable reconstruction of the same cryptographic state locally.</p>
 <h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="sh"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">deno</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">jsr:@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">vlt</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">jsr:@sovereignbase/hardware-bound</span>
 </code><button type="button">Copy</button></pre>
 
 <h2 id="usage" class="tsd-anchor-link">Usage<a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<pre><code class="js"><span class="hl-4">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">createDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">deriveDeviceEntropy</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@sovereignbase/hardware-bound&#39;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">created</span><span class="hl-1">, </span><span class="hl-7">storage</span><span class="hl-1">] = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><span class="hl-2">&#39;Ada Lovelace&#39;</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">created</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">storage</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entropy</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">deriveDeviceEntropy</span><span class="hl-1">()</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">entropy</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Entropy derivation failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">entropy</span><span class="hl-1">)</span>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">createDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">accessDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">invalidateDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@sovereignbase/hardware-bound&#39;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">created</span><span class="hl-1">, </span><span class="hl-7">bindingStorage</span><span class="hl-1">] = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><span class="hl-2">&#39;Ada Lovelace&#39;</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">created</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding creation failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">bindingStorage</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">binding</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">accessDeviceBinding</span><span class="hl-1">()</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">binding</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding access failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">credentialId</span><span class="hl-1">, </span><span class="hl-7">entropy</span><span class="hl-1">] = </span><span class="hl-5">binding</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">credentialId</span><span class="hl-1">, </span><span class="hl-5">entropy</span><span class="hl-1">)</span><br/><br/><span class="hl-3">// When the credential is no longer accepted:</span><br/><span class="hl-3">// await invalidateDeviceBinding(credentialId)</span>
 </code><button type="button">Copy</button></pre>
 
 <h2 id="api" class="tsd-anchor-link">API<a href="#api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <h3 id="_" class="tsd-anchor-link"><code>createDeviceBinding(credentialName, signal?)</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Creates a device binding for the current origin and returns a pair:</p>
-<pre><code class="ts"><span class="hl-1">[</span><span class="hl-5">created</span><span class="hl-1">: </span><span class="hl-5">boolean</span><span class="hl-1">, </span><span class="hl-5">storage</span><span class="hl-1">: </span><span class="hl-5">DeviceBindingStorage</span><span class="hl-1">]</span>
+<p>Creates a device binding for the current origin.</p>
+<pre><code class="ts"><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialName</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;[</span><span class="hl-5">created</span><span class="hl-1">: </span><span class="hl-5">boolean</span><span class="hl-1">, </span><span class="hl-5">bindingStorage</span><span class="hl-1">: </span><span class="hl-5">DeviceBindingStorage</span><span class="hl-1">]&gt;</span>
 </code><button type="button">Copy</button></pre>
 
-<p><code>storage</code> is one of:</p>
+<p><strong>Parameters</strong></p>
 <ul>
-<li><code>device-bound</code>: the authenticator reports a single-device credential that is
-not eligible for backup.</li>
-<li><code>sync-eligible</code>: the credential is eligible for backup but is not currently
-reported as backed up.</li>
-<li><code>synced</code>: the credential is eligible for backup and currently reported as
-backed up.</li>
-<li><code>unknown</code>: the browser did not expose usable authenticator data, the flags
-were inconsistent, or creation failed.</li>
+<li><code>credentialName</code>: The display name assigned to the credential.</li>
+<li><code>signal</code>: An optional <code>AbortSignal</code> used to cancel the operation.</li>
 </ul>
-<p>The storage signal describes WebAuthn credential backup eligibility and state.
-It does not attest whether key material is protected by software, a TEE, or a
-secure element.</p>
-<h3 id="_-1" class="tsd-anchor-link"><code>deriveDeviceEntropy(signal?)</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Derives deterministic entropy bytes from the existing device binding and returns either:</p>
+<p><strong>Returns</strong></p>
+<p>A tuple containing the creation status and binding storage characteristics.</p>
+<p><code>bindingStorage</code> is one of:</p>
 <ul>
-<li><code>Uint8Array</code></li>
-<li><code>false</code></li>
+<li><code>non-extractable</code>: The credential is not eligible for backup or synchronization.</li>
+<li><code>sync-eligible</code>: The credential is eligible for backup but has not been backed up.</li>
+<li><code>synced</code>: The credential has been backed up and may be available on other devices.</li>
+<li><code>unknown</code>: The credential's storage characteristics could not be determined.</li>
 </ul>
-<p>The returned bytes are:</p>
+<p>The storage classification reflects the credential's reported backup state, not whether its private key is hardware-protected.</p>
+<p>Returns <code>[false, 'unknown']</code> if credential creation fails or the required PRF functionality is unavailable.</p>
+<h3 id="_-1" class="tsd-anchor-link"><code>accessDeviceBinding(signal?)</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Accesses an existing device binding.</p>
+<pre><code class="ts"><span class="hl-0">accessDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-5">DeviceBinding</span><span class="hl-1"> | </span><span class="hl-6">false</span><span class="hl-1">&gt;</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>signal</code>: An optional <code>AbortSignal</code> used to cancel the operation.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>A tuple containing the credential identifier and its associated entropy:</p>
+<pre><code class="ts"><span class="hl-6">type</span><span class="hl-1"> </span><span class="hl-8">DeviceBinding</span><span class="hl-1"> = [</span><span class="hl-9">id</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">, </span><span class="hl-9">entropy</span><span class="hl-1">: </span><span class="hl-8">Uint8Array</span><span class="hl-1">]</span>
+</code><button type="button">Copy</button></pre>
+
+<ul>
+<li><code>id</code>: The Base64URL-encoded credential identifier.</li>
+<li><code>entropy</code>: Stable entropy bytes associated with the credential.</li>
+</ul>
+<p>The entropy consists of the concatenation of:</p>
 <ol>
-<li>credential <code>rawId</code></li>
-<li>first PRF output</li>
-<li>second PRF output</li>
+<li>The credential's raw identifier.</li>
+<li>The first PRF output.</li>
+<li>The second PRF output.</li>
 </ol>
+<p>Accessing the same credential with the same PRF inputs produces the same entropy, allowing applications to reconstruct cryptographic state without persisting the entropy themselves.</p>
+<p>Returns <code>false</code> if the credential cannot be accessed or the required PRF outputs are unavailable.</p>
+<h3 id="_-2" class="tsd-anchor-link"><code>invalidateDeviceBinding(credentialId)</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Requests invalidation of an existing device binding.</p>
+<pre><code class="ts"><span class="hl-0">invalidateDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialId</span><span class="hl-1">: </span><span class="hl-5">string</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-6">void</span><span class="hl-1">&gt;</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>credentialId</code>: The Base64URL-encoded identifier of the credential to invalidate.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>A promise that resolves when the invalidation request completes.</p>
+<p>Invalidation is best-effort. The browser or credential provider may remove or hide the credential, but successful completion does not guarantee deletion.</p>
 <h2 id="behavior" class="tsd-anchor-link">Behavior<a href="#behavior" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
-<li>No storage.</li>
-<li>No network.</li>
-<li>No thrown library errors from the two exported functions. Failure is <code>false</code>.</li>
-<li>Intended as bootstrap material for local cryptographic state, not as a general authentication library.</li>
-</ul>
-<h2 id="tests" class="tsd-anchor-link">Tests<a href="#tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<ul>
-<li>Unit and integration tests in Vitest.</li>
-<li>Browser tests in Playwright.</li>
-<li>Browser matrix: Chromium, Firefox, WebKit, Pixel 5 emulation, iPhone 12 emulation.</li>
+<li><strong>User verification:</strong> Credential creation and access require user verification.</li>
+<li><strong>Stable entropy:</strong> Repeated access to the same credential provides consistent entropy for reconstructing local cryptographic state.</li>
+<li><strong>Offline-capable:</strong> No application-level network requests are required. Offline access depends on the credential being locally available.</li>
+<li><strong>No application storage:</strong> The library does not persist credentials or entropy in browser storage.</li>
+<li><strong>Error handling:</strong> Credential creation and access return failure values for unsuccessful credential requests. Unexpected failures are wrapped in <code>DeviceBoundError</code> with the <code>UNKNOWN_ERROR</code> code and the original cause.</li>
+<li><strong>Scope:</strong> Intended for bootstrapping local cryptographic state, not as a general-purpose authentication library.</li>
 </ul>
 <h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Apache-2.0</p>
@@ -98,9 +117,9 @@ secure element.</p>
 <li>
 <ul>
 <li><a href="#_"><span></span></a></li>
-<li><a href="#_-1"><span></span></a></li></ul></li>
+<li><a href="#_-1"><span></span></a></li>
+<li><a href="#_-2"><span></span></a></li></ul></li>
 <li><a href="#behavior"><span>Behavior</span></a></li>
-<li><a href="#tests"><span>Tests</span></a></li>
 <li><a href="#license"><span>License</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="modules.html">@sovereignbase/hardware-bound</a>

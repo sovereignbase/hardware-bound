@@ -6,5 +6,5 @@
     "noEmit": true,
     "rootDir": ".."
   },
-  "include": ["unit/**/*.test.ts", "integration/**/*.test.ts"]
+  "include": ["**/*.ts", "../playwright.config.ts", "../vitest.config.ts"]
 }
