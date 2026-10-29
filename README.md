@@ -148,7 +148,7 @@ Invalidation is best-effort. The browser or credential provider may remove or hi
 
 ## Tests
 
-Vitest: 55 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
+Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
 
 ### Coverage
 
@@ -156,17 +156,29 @@ Vitest: 55 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
 | ---------- | -------- | --------- | ----- |
 | 100%       | 100%     | 100%      | 100%  |
 
-### Browser compatibility
+### Browser wrapper tests
+
+| Browser                             | Result | Passed | Failed | Flaky | Skipped |
+| ----------------------------------- | ------ | ------ | ------ | ----- | ------- |
+| Chromium                            | Passed | 5      | 0      | 0     | 0       |
+| Firefox                             | Passed | 5      | 0      | 0     | 0       |
+| WebKit                              | Passed | 5      | 0      | 0     | 0       |
+| Mobile Chrome (Pixel 5 emulation)   | Passed | 5      | 0      | 0     | 0       |
+| Mobile Safari (iPhone 12 emulation) | Passed | 5      | 0      | 0     | 0       |
+
+### Native WebAuthn and PRF
 
 | Browser                             | Result  | Passed | Failed | Flaky | Skipped |
 | ----------------------------------- | ------- | ------ | ------ | ----- | ------- |
-| Chromium                            | Passed  | 17     | 0      | 0     | 0       |
+| Chromium                            | Passed  | 6      | 0      | 0     | 0       |
 | Firefox                             | Not run | 0      | 0      | 0     | 0       |
-| WebKit                              | Passed  | 17     | 0      | 0     | 0       |
-| Mobile Chrome (Pixel 5 emulation)   | Passed  | 17     | 0      | 0     | 0       |
-| Mobile Safari (iPhone 12 emulation) | Passed  | 17     | 0      | 0     | 0       |
+| WebKit                              | Not run | 0      | 0      | 0     | 0       |
+| Mobile Chrome (Pixel 5 emulation)   | Passed  | 6      | 0      | 0     | 0       |
+| Mobile Safari (iPhone 12 emulation) | Not run | 0      | 0      | 0     | 0       |
 
-Browser checks use mocked WebAuthn responses.
+Wrapper tests use Playwright’s `context.credentials` mock, which currently returns no PRF extension results. They verify rejection of credentials without PRF support and unavailable credentials. Successful PRF operations use native browser virtual authenticators with automatic user verification.
+
+Native tests currently cover Chromium. “Not run” describes automated test coverage, not browser support. Mobile projects use device emulation.
 
 ## License
 

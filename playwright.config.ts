@@ -20,10 +20,12 @@ export default defineConfig({
     },
     {
       name: 'firefox',
+      testIgnore: '**/native.spec.ts',
       use: { browserName: 'firefox' },
     },
     {
       name: 'webkit',
+      testIgnore: '**/native.spec.ts',
       use: { browserName: 'webkit' },
     },
     {
@@ -32,6 +34,7 @@ export default defineConfig({
     },
     {
       name: 'mobile-safari',
+      testIgnore: '**/native.spec.ts',
       use: { ...devices['iPhone 12'] },
     },
   ],

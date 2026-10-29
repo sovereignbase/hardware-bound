@@ -93,7 +93,7 @@
 <li><strong>Scope:</strong> Intended for bootstrapping local cryptographic state, not as a general-purpose authentication library.</li>
 </ul>
 <h2 id="tests" class="tsd-anchor-link">Tests<a href="#tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Vitest: 54 passed, 1 failed, 0 skipped, 0 todo. Result: failed.</p>
+<p>Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.</p>
 <h3 id="coverage" class="tsd-anchor-link">Coverage<a href="#coverage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <table>
 <thead>
@@ -113,7 +113,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="browser-compatibility" class="tsd-anchor-link">Browser compatibility<a href="#browser-compatibility" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="browser-wrapper-tests" class="tsd-anchor-link">Browser wrapper tests<a href="#browser-wrapper-tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <table>
 <thead>
 <tr>
@@ -128,8 +128,63 @@
 <tbody>
 <tr>
 <td>Chromium</td>
-<td>Not run</td>
+<td>Passed</td>
+<td>5</td>
 <td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Firefox</td>
+<td>Passed</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>WebKit</td>
+<td>Passed</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Mobile Chrome (Pixel 5 emulation)</td>
+<td>Passed</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Mobile Safari (iPhone 12 emulation)</td>
+<td>Passed</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="native-webauthn-and-prf" class="tsd-anchor-link">Native WebAuthn and PRF<a href="#native-webauthn-and-prf" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Browser</th>
+<th>Result</th>
+<th>Passed</th>
+<th>Failed</th>
+<th>Flaky</th>
+<th>Skipped</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chromium</td>
+<td>Passed</td>
+<td>6</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -152,8 +207,8 @@
 </tr>
 <tr>
 <td>Mobile Chrome (Pixel 5 emulation)</td>
-<td>Not run</td>
-<td>0</td>
+<td>Passed</td>
+<td>6</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -168,7 +223,8 @@
 </tr>
 </tbody>
 </table>
-<p>Browser checks use mocked WebAuthn responses.</p>
+<p>Wrapper tests use Playwright’s <code>context.credentials</code> mock, which currently returns no PRF extension results. They verify rejection of credentials without PRF support and unavailable credentials. Successful PRF operations use native browser virtual authenticators with automatic user verification.</p>
+<p>Native tests currently cover Chromium. “Not run” describes automated test coverage, not browser support. Mobile projects use device emulation.</p>
 <h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Apache-2.0</p>
 </div></div>
@@ -201,7 +257,8 @@
 <li>
 <ul>
 <li><a href="#coverage"><span>Coverage</span></a></li>
-<li><a href="#browser-compatibility"><span>Browser compatibility</span></a></li></ul></li>
+<li><a href="#browser-wrapper-tests"><span>Browser wrapper tests</span></a></li>
+<li><a href="#native-webauthn-and-prf"><span>Native <wbr/>Web<wbr/>Authn and <wbr/>PRF</span></a></li></ul></li>
 <li><a href="#license"><span>License</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="modules.html">@sovereignbase/hardware-bound</a>

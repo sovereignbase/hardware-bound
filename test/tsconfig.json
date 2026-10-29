@@ -7,6 +7,7 @@
     "allowImportingTsExtensions": true,
     "rootDir": ".."
   },
+  "exclude": [".results"],
   "include": [
     "**/*.ts",
     "../scripts/**/*.ts",

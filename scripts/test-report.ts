@@ -58,9 +58,16 @@ function table(rows: string[][]): string {
     .join('\n')
 }
 
-function browserTests(suites: JSONReportSuite[]): JSONReportTest[] {
+type BrowserTest = JSONReportTest & { native: boolean }
+
+function browserTests(suites: JSONReportSuite[]): BrowserTest[] {
   return suites.flatMap((suite) => [
-    ...suite.specs.flatMap((spec) => spec.tests),
+    ...suite.specs.flatMap((spec) =>
+      spec.tests.map((test) => ({
+        ...test,
+        native: /(?:^|[/\\])native\.spec\.ts$/.test(spec.file),
+      }))
+    ),
     ...browserTests(suite.suites ?? []),
   ])
 }
@@ -73,30 +80,35 @@ export function renderTests(
   exitCodes: ExitCodes = {}
 ): string {
   const tests = browserTests(report?.suites ?? [])
-  const rows = browsers.map(([name, label]) => {
-    const results = tests.filter((test) => test.projectName === name)
-    const passed = results.filter((test) => test.status === 'expected').length
-    const failed = results.filter((test) => test.status === 'unexpected').length
-    const flaky = results.filter((test) => test.status === 'flaky').length
-    const skipped = results.filter((test) => test.status === 'skipped').length
-    const status = !results.length
-      ? 'Not run'
-      : failed
-        ? 'Failed'
-        : flaky
-          ? 'Flaky'
-          : skipped
-            ? 'Incomplete'
-            : 'Passed'
-    return [
-      label,
-      status,
-      String(passed),
-      String(failed),
-      String(flaky),
-      String(skipped),
-    ]
-  })
+  const browserRows = (native: boolean) =>
+    browsers.map(([name, label]) => {
+      const results = tests.filter(
+        (test) => test.projectName === name && test.native === native
+      )
+      const passed = results.filter((test) => test.status === 'expected').length
+      const failed = results.filter(
+        (test) => test.status === 'unexpected'
+      ).length
+      const flaky = results.filter((test) => test.status === 'flaky').length
+      const skipped = results.filter((test) => test.status === 'skipped').length
+      const status = !results.length
+        ? 'Not run'
+        : failed
+          ? 'Failed'
+          : flaky
+            ? 'Flaky'
+            : skipped
+              ? 'Incomplete'
+              : 'Passed'
+      return [
+        label,
+        status,
+        String(passed),
+        String(failed),
+        String(flaky),
+        String(skipped),
+      ]
+    })
 
   return [
     vitest
@@ -114,11 +126,18 @@ export function renderTests(
         ])
       : 'Coverage was not collected in the latest Vitest run.',
     '',
-    '### Browser compatibility',
+    '### Browser wrapper tests',
     '',
     table([
       ['Browser', 'Result', 'Passed', 'Failed', 'Flaky', 'Skipped'],
-      ...rows,
+      ...browserRows(false),
+    ]),
+    '',
+    '### Native WebAuthn and PRF',
+    '',
+    table([
+      ['Browser', 'Result', 'Passed', 'Failed', 'Flaky', 'Skipped'],
+      ...browserRows(true),
     ]),
     ...(report?.errors.length
       ? ['', `Browser runner errors: ${report.errors.length}.`]
@@ -127,7 +146,9 @@ export function renderTests(
       ? ['', 'Browser runner failed before results were available.']
       : []),
     '',
-    'Browser checks use mocked WebAuthn responses.',
+    'Wrapper tests use Playwright’s `context.credentials` mock, which currently returns no PRF extension results. They verify rejection of credentials without PRF support and unavailable credentials. Successful PRF operations use native browser virtual authenticators with automatic user verification.',
+    '',
+    'Native tests currently cover Chromium. “Not run” describes automated test coverage, not browser support. Mobile projects use device emulation.',
   ].join('\n')
 }
 

@@ -114,7 +114,7 @@ test('reports missing results and failed runner exits without stale success clai
   })
   expect(missing).toContain('Vitest: runner failed')
   expect(missing).toContain('Browser runner failed')
-  expect(missing.match(/\| Not run \|/g)).toHaveLength(5)
+  expect(missing.match(/\| Not run \|/g)).toHaveLength(10)
   expect(renderTests(vitest, coverage, undefined, { coverage: 1 })).toContain(
     'Result: failed.'
   )
@@ -148,4 +148,15 @@ test('refuses to overwrite a README without a Tests section', () => {
   expect(() => replaceTests('# Package\n\n## License\n', 'Results')).toThrow(
     'Missing README section: Tests'
   )
+})
+
+test('reports native WebAuthn separately from mocked wrapper tests', () => {
+  const report = browserReport(['expected'])
+  report.suites[0]!.suites![0]!.specs[0]!.file =
+    'test/compatibility/browsers/native.spec.ts'
+  const [wrapper, native] = renderTests(vitest, coverage, report).split(
+    '### Native WebAuthn and PRF'
+  )
+  expect(wrapper).toContain('| Chromium | Not run | 0 | 0 | 0 | 0 |')
+  expect(native).toContain('| Chromium | Passed | 1 | 0 | 0 | 0 |')
 })
