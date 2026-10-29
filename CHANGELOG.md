@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/sovereignbase/hardware-bound/compare/v2.0.2...v3.0.0) (2026-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* deriveDeviceEntropy() has been replaced by accessDeviceBinding().
+
+### Features
+
+* redesign device binding API ([67dc873](https://github.com/sovereignbase/hardware-bound/commit/67dc8736afab9db756a10aff1a43881c1fccdb8d))
+
 ## [2.0.2](https://github.com/sovereignbase/hardware-bound/compare/v2.0.1...v2.0.2) (2026-09-12)
 
 
