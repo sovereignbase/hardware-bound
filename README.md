@@ -158,13 +158,13 @@ Vitest: 57 passed, 0 failed, 0 skipped, 0 todo. Result: passed.
 
 ### Browser wrapper tests
 
-| Browser                             | Result  | Passed | Failed | Flaky | Skipped |
-| ----------------------------------- | ------- | ------ | ------ | ----- | ------- |
-| Chromium                            | Passed  | 7      | 0      | 0     | 0       |
-| Firefox                             | Not run | 0      | 0      | 0     | 0       |
-| WebKit                              | Passed  | 7      | 0      | 0     | 0       |
-| Mobile Chrome (Pixel 5 emulation)   | Passed  | 7      | 0      | 0     | 0       |
-| Mobile Safari (iPhone 12 emulation) | Passed  | 7      | 0      | 0     | 0       |
+| Browser                             | Result | Passed | Failed | Flaky | Skipped |
+| ----------------------------------- | ------ | ------ | ------ | ----- | ------- |
+| Chromium                            | Passed | 7      | 0      | 0     | 0       |
+| Firefox                             | Passed | 7      | 0      | 0     | 0       |
+| WebKit                              | Passed | 7      | 0      | 0     | 0       |
+| Mobile Chrome (Pixel 5 emulation)   | Passed | 7      | 0      | 0     | 0       |
+| Mobile Safari (iPhone 12 emulation) | Passed | 7      | 0      | 0     | 0       |
 
 ### Native WebAuthn and PRF
 
