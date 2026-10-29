@@ -17,7 +17,6 @@ export type DeviceBindingStorage =
 /**
  * Represents a device binding and its associated entropy.
  */
-export type DeviceBinding = [id: string, entropy: Uint8Array]
 
 const timeout = 60_000
 const mediation: CredentialRequestOptions['mediation'] = 'required'
@@ -37,13 +36,13 @@ const prfInput2: BufferSource = Bytes.utf8.decode(
  *
  * @param credentialName The display name assigned to the credential.
  * @param signal An optional signal used to abort the operation.
- * @returns The creation status and binding storage characteristics, or
- * `[false, 'unknown']` if creation fails.
+ * @returns The credential identifier and binding storage characteristics,
+ * or `false` if creation fails.
  */
 export async function createDeviceBinding(
   credentialName: string,
   signal?: AbortSignal
-): Promise<[created: boolean, bindingStorage: DeviceBindingStorage]> {
+): Promise<false | [id: string, bindingStorage: DeviceBindingStorage]> {
   try {
     const publicKey: PublicKeyCredentialCreationOptions = {
       rp: { id: window.location.hostname, name: window.location.host },
@@ -81,10 +80,10 @@ export async function createDeviceBinding(
         signal,
       })) as PublicKeyCredential | null
     } catch {
-      return [false, 'unknown']
+      return false
     }
 
-    if (!credential) return [false, 'unknown']
+    if (!credential) return false
 
     if (credential.getClientExtensionResults().prf?.enabled !== true) {
       try {
@@ -92,27 +91,27 @@ export async function createDeviceBinding(
       } catch {
         // Credential removal is best-effort.
       }
-      return [false, 'unknown']
+      return false
     }
 
     try {
       const response = credential.response as AuthenticatorAttestationResponse
       if (!response || typeof response.getAuthenticatorData !== 'function') {
-        return [true, 'unknown']
+        return [credential.id, 'unknown']
       }
 
       const authenticatorData = new Uint8Array(response.getAuthenticatorData())
-      if (authenticatorData.length < 33) return [true, 'unknown']
+      if (authenticatorData.length < 33) return [credential.id, 'unknown']
 
       const flags = authenticatorData[32]
       const backupEligible = (flags & 0x08) !== 0
       const backedUp = (flags & 0x10) !== 0
 
-      if (!backupEligible && backedUp) return [true, 'unknown']
-      if (!backupEligible) return [true, 'non-extractable']
-      return [true, backedUp ? 'synced' : 'sync-eligible']
+      if (!backupEligible && backedUp) return [credential.id, 'unknown']
+      if (!backupEligible) return [credential.id, 'non-extractable']
+      return [credential.id, backedUp ? 'synced' : 'sync-eligible']
     } catch {
-      return [true, 'unknown']
+      return [credential.id, 'unknown']
     }
   } catch (cause) {
     throw unknownError(cause, 'DeviceBound.createDeviceBinding()')
@@ -122,13 +121,15 @@ export async function createDeviceBinding(
 /**
  * Accesses an existing device binding.
  *
+ * @param id An optional credential identifier used to restrict credential selection.
  * @param signal An optional signal used to abort the operation.
  * @returns The credential identifier and associated entropy, or `false`
  * if the binding cannot be accessed.
  */
 export async function accessDeviceBinding(
+  id?: string,
   signal?: AbortSignal
-): Promise<DeviceBinding | false> {
+): Promise<false | [id: string, entropy: Uint8Array]> {
   try {
     let credential: PublicKeyCredential | null
     try {
@@ -136,7 +137,15 @@ export async function accessDeviceBinding(
         publicKey: {
           rpId: window.location.hostname,
           challenge: crypto.getRandomValues(new Uint8Array(32)),
-          allowCredentials: [],
+          allowCredentials:
+            typeof id === 'string'
+              ? [
+                  {
+                    id: Bytes.base64url.decode(id) as BufferSource,
+                    type: 'public-key',
+                  },
+                ]
+              : [],
           userVerification: userVerification,
           timeout: timeout,
           extensions: {
