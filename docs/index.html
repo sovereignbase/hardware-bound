@@ -146,7 +146,7 @@
                 <use href="assets/icons.svg#icon-anchor"></use></svg
             ></a>
           </h2>
-          <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">createDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">accessDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">invalidateDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@sovereignbase/hardware-bound&#39;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">created</span><span class="hl-1">, </span><span class="hl-7">bindingStorage</span><span class="hl-1">] = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><span class="hl-2">&#39;Ada Lovelace&#39;</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">created</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding creation failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">bindingStorage</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">binding</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">accessDeviceBinding</span><span class="hl-1">()</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">binding</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding access failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">credentialId</span><span class="hl-1">, </span><span class="hl-7">entropy</span><span class="hl-1">] = </span><span class="hl-5">binding</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">credentialId</span><span class="hl-1">, </span><span class="hl-5">entropy</span><span class="hl-1">)</span><br/><br/><span class="hl-3">// When the credential is no longer accepted:</span><br/><span class="hl-3">// await invalidateDeviceBinding(credentialId)</span>
+          <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">createDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">accessDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">invalidateDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@sovereignbase/hardware-bound&#39;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">created</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><span class="hl-2">&#39;Ada Lovelace&#39;</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">created</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding creation failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">credentialId</span><span class="hl-1">, </span><span class="hl-7">bindingStorage</span><span class="hl-1">] = </span><span class="hl-5">created</span><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">bindingStorage</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">binding</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">accessDeviceBinding</span><span class="hl-1">(</span><span class="hl-5">credentialId</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">binding</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding access failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [, </span><span class="hl-7">entropy</span><span class="hl-1">] = </span><span class="hl-5">binding</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">credentialId</span><span class="hl-1">, </span><span class="hl-5">entropy</span><span class="hl-1">)</span><br/><br/><span class="hl-3">// When the credential is no longer accepted:</span><br/><span class="hl-3">// await invalidateDeviceBinding(credentialId)</span>
 </code><button type="button">Copy</button></pre>
 
           <h2 id="api" class="tsd-anchor-link">
@@ -163,7 +163,7 @@
             ></a>
           </h3>
           <p>Creates a device binding for the current origin.</p>
-          <pre><code class="ts"><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialName</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;[</span><span class="hl-5">created</span><span class="hl-1">: </span><span class="hl-5">boolean</span><span class="hl-1">, </span><span class="hl-5">bindingStorage</span><span class="hl-1">: </span><span class="hl-5">DeviceBindingStorage</span><span class="hl-1">]&gt;</span>
+          <pre><code class="ts"><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialName</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-6">false</span><span class="hl-1"> | [</span><span class="hl-5">credentialId</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">, </span><span class="hl-5">bindingStorage</span><span class="hl-1">: </span><span class="hl-5">DeviceBindingStorage</span><span class="hl-1">]&gt;</span>
 </code><button type="button">Copy</button></pre>
 
           <p><strong>Parameters</strong></p>
@@ -179,8 +179,9 @@
           </ul>
           <p><strong>Returns</strong></p>
           <p>
-            A tuple containing the creation status and binding storage
-            characteristics.
+            A tuple containing the Base64URL-encoded credential identifier and
+            binding storage characteristics, or <code>false</code> if creation
+            fails.
           </p>
           <p><code>bindingStorage</code> is one of:</p>
           <ul>
@@ -206,22 +207,28 @@
             state, not whether its private key is hardware-protected.
           </p>
           <p>
-            Returns <code>[false, 'unknown']</code> if credential creation fails
-            or the required PRF functionality is unavailable.
+            Returns <code>false</code> if credential creation fails or the
+            required PRF functionality is unavailable.
           </p>
           <h3 id="_-1" class="tsd-anchor-link">
-            <code>accessDeviceBinding(signal?)</code
+            <code>accessDeviceBinding(credentialId?, signal?)</code
             ><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"
               ><svg viewBox="0 0 24 24" aria-hidden="true">
                 <use href="assets/icons.svg#icon-anchor"></use></svg
             ></a>
           </h3>
           <p>Accesses an existing device binding.</p>
-          <pre><code class="ts"><span class="hl-0">accessDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-5">DeviceBinding</span><span class="hl-1"> | </span><span class="hl-6">false</span><span class="hl-1">&gt;</span>
+          <pre><code class="ts"><span class="hl-0">accessDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialId</span><span class="hl-1">?: </span><span class="hl-5">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-6">false</span><span class="hl-1"> | [</span><span class="hl-5">credentialId</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">, </span><span class="hl-5">entropy</span><span class="hl-1">: </span><span class="hl-5">Uint8Array</span><span class="hl-1">]&gt;</span>
 </code><button type="button">Copy</button></pre>
 
           <p><strong>Parameters</strong></p>
           <ul>
+            <li>
+              <code>credentialId</code>: An optional Base64URL-encoded
+              credential identifier. When provided, only that credential can be
+              selected. When omitted, the browser can select an available
+              discoverable credential for the current origin.
+            </li>
             <li>
               <code>signal</code>: An optional <code>AbortSignal</code> used to
               cancel the operation.
@@ -230,14 +237,12 @@
           <p><strong>Returns</strong></p>
           <p>
             A tuple containing the credential identifier and its associated
-            entropy:
+            entropy, or <code>false</code> if access fails.
           </p>
-          <pre><code class="ts"><span class="hl-6">type</span><span class="hl-1"> </span><span class="hl-8">DeviceBinding</span><span class="hl-1"> = [</span><span class="hl-9">id</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">, </span><span class="hl-9">entropy</span><span class="hl-1">: </span><span class="hl-8">Uint8Array</span><span class="hl-1">]</span>
-</code><button type="button">Copy</button></pre>
-
           <ul>
             <li>
-              <code>id</code>: The Base64URL-encoded credential identifier.
+              <code>credentialId</code>: The Base64URL-encoded credential
+              identifier.
             </li>
             <li>
               <code>entropy</code>: Stable entropy bytes associated with the
@@ -257,7 +262,9 @@
           </p>
           <p>
             Returns <code>false</code> if the credential cannot be accessed or
-            the required PRF outputs are unavailable.
+            the required PRF outputs are unavailable. If the requested
+            credential is unavailable, access does not fall back to another
+            credential.
           </p>
           <h3 id="_-2" class="tsd-anchor-link">
             <code>invalidateDeviceBinding(credentialId)</code
@@ -333,7 +340,7 @@
                 <use href="assets/icons.svg#icon-anchor"></use></svg
             ></a>
           </h2>
-          <p>Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.</p>
+          <p>Vitest: 57 passed, 0 failed, 0 skipped, 0 todo. Result: passed.</p>
           <h3 id="coverage" class="tsd-anchor-link">
             Coverage<a
               href="#coverage"
@@ -385,15 +392,15 @@
               <tr>
                 <td>Chromium</td>
                 <td>Passed</td>
-                <td>5</td>
+                <td>7</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
               </tr>
               <tr>
                 <td>Firefox</td>
-                <td>Passed</td>
-                <td>5</td>
+                <td>Not run</td>
+                <td>0</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -401,7 +408,7 @@
               <tr>
                 <td>WebKit</td>
                 <td>Passed</td>
-                <td>5</td>
+                <td>7</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -409,7 +416,7 @@
               <tr>
                 <td>Mobile Chrome (Pixel 5 emulation)</td>
                 <td>Passed</td>
-                <td>5</td>
+                <td>7</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -417,7 +424,7 @@
               <tr>
                 <td>Mobile Safari (iPhone 12 emulation)</td>
                 <td>Passed</td>
-                <td>5</td>
+                <td>7</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -448,7 +455,7 @@
               <tr>
                 <td>Chromium</td>
                 <td>Passed</td>
-                <td>6</td>
+                <td>7</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -472,7 +479,7 @@
               <tr>
                 <td>Mobile Chrome (Pixel 5 emulation)</td>
                 <td>Passed</td>
-                <td>6</td>
+                <td>7</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>

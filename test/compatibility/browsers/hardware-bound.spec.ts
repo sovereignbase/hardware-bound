@@ -17,7 +17,7 @@ test('rejects a registered credential without PRF support', async ({
 }) => {
   expect(
     await page.evaluate(() => hardwareBound.createDeviceBinding('Alice'))
-  ).toEqual([false, 'unknown'])
+  ).toBe(false)
 
   const credentials = await context.credentials.get()
   expect(credentials).toHaveLength(1)
@@ -38,6 +38,42 @@ test('rejects assertions without PRF outputs on repeated access', async ({
       { ...credential, signCount },
     ])
   }
+})
+
+test('restricts access to the requested credential', async ({
+  context,
+  page,
+}) => {
+  const first = await context.credentials.create('127.0.0.1')
+  const selected = await context.credentials.create('127.0.0.1')
+
+  expect(
+    await page.evaluate(
+      (id) => hardwareBound.accessDeviceBinding(id),
+      selected.id
+    )
+  ).toBe(false)
+  expect(await context.credentials.get({ id: first.id })).toEqual([first])
+  expect(await context.credentials.get({ id: selected.id })).toEqual([
+    { ...selected, signCount: 1 },
+  ])
+})
+
+test('does not fall back to another credential when the requested ID is unavailable', async ({
+  context,
+  page,
+}) => {
+  const missing = await context.credentials.create('127.0.0.1')
+  const available = await context.credentials.create('127.0.0.1')
+  await context.credentials.delete(missing.id)
+
+  expect(
+    await page.evaluate(
+      (id) => hardwareBound.accessDeviceBinding(id),
+      missing.id
+    )
+  ).toBe(false)
+  expect(await context.credentials.get()).toEqual([available])
 })
 
 for (const state of ['missing', 'different RP', 'deleted'] as const) {
