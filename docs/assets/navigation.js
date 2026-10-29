@@ -1,1 +1,2 @@
-window.navigationData = "eJyNzrsKwkAQheF3mXoxGrzgluIbWIrFMDsmg3ESsmNQxHe3sTC4SazPz8c5PsH4buBhz50Q70SDaAEOGrQSPNij4Zj1xllp1wocXEQD+Hy+3SxW+culpYPVLRY8Cn6aKReJOMaBn+ebkkmtMUtkfXm9/EKpZTSeRBPZCCraYSXhH3gg/cFPbxu+lAI="
+window.navigationData =
+  'eJyNzrsKwkAQheF3mXoxGrzgluIbWIrFMDsmg3ESsmNQxHe3sTC4SazPz8c5PsH4buBhz50Q70SDaAEOGrQSPNij4Zj1xllp1wocXEQD+Hy+3SxW+culpYPVLRY8Cn6aKReJOMaBn+ebkkmtMUtkfXm9/EKpZTSeRBPZCCraYSXhH3gg/cFPbxu+lAI='

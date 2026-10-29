@@ -1,268 +1,735 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@sovereignbase/hardware-bound</title><link rel="icon" href="https://sovereignbase.dev/sovereignbase_logo.png"/><meta name="description" content="Documentation for @sovereignbase/hardware-bound"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
-<div class="tsd-toolbar-contents container"><a href="index.html" class="title">@sovereignbase/hardware-bound</a>
-<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
-<ul role="listbox" id="tsd-search-results"></ul>
-<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
-<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header>
-<div class="container container-main">
-<div class="col-content">
-<div class="tsd-page-title">
-<h1>@sovereignbase/hardware-bound</h1></div>
-<div class="tsd-panel tsd-typography"><p><a href="https://www.npmjs.com/package/@sovereignbase/hardware-bound"><img src="https://img.shields.io/npm/v/@sovereignbase/hardware-bound" alt="npm version"></a>
-<a href="https://jsr.io/@sovereignbase/hardware-bound"><img src="https://jsr.io/badges/@sovereignbase/hardware-bound" alt="JSR"></a>
-<a href="https://github.com/sovereignbase/hardware-bound/actions/workflows/ci.yaml"><img src="https://github.com/sovereignbase/hardware-bound/actions/workflows/ci.yaml/badge.svg?branch=master" alt="CI"></a>
-<a href="https://codecov.io/gh/sovereignbase/hardware-bound"><img src="https://codecov.io/gh/sovereignbase/hardware-bound/branch/master/graph/badge.svg" alt="codecov"></a>
-<a href="LICENSE"><img src="https://img.shields.io/npm/l/@sovereignbase/hardware-bound" alt="license"></a></p>
-<h1 id="hardware-bound" class="tsd-anchor-link">hardware-bound<a href="#hardware-bound" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
-<p>Creates a device-bound browser credential and provides access to stable entropy upon user authentication, enabling reliable reconstruction of the same cryptographic state locally.</p>
-<h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<pre><code class="sh"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">deno</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">jsr:@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">vlt</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">jsr:@sovereignbase/hardware-bound</span>
+<!doctype html>
+<html class="default" lang="en" data-base="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <title>@sovereignbase/hardware-bound</title>
+    <link rel="icon" href="https://sovereignbase.dev/sovereignbase_logo.png" />
+    <meta
+      name="description"
+      content="Documentation for @sovereignbase/hardware-bound"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/style.css" />
+    <link rel="stylesheet" href="assets/highlight.css" />
+    <script defer src="assets/main.js"></script>
+    <script async src="assets/icons.js" id="tsd-icons-script"></script>
+    <script async src="assets/search.js" id="tsd-search-script"></script>
+    <script async src="assets/navigation.js" id="tsd-nav-script"></script>
+  </head>
+  <body>
+    <script>
+      document.documentElement.dataset.theme =
+        localStorage.getItem('tsd-theme') || 'os'
+      document.body.style.display = 'none'
+      setTimeout(
+        () =>
+          window.app
+            ? app.showPage()
+            : document.body.style.removeProperty('display'),
+        500
+      )
+    </script>
+    <header class="tsd-page-toolbar">
+      <div class="tsd-toolbar-contents container">
+        <a href="index.html" class="title">@sovereignbase/hardware-bound</a>
+        <div id="tsd-toolbar-links"></div>
+        <button id="tsd-search-trigger" class="tsd-widget" aria-label="Search">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <use href="assets/icons.svg#icon-search"></use>
+          </svg>
+        </button>
+        <dialog id="tsd-search" aria-label="Search">
+          <input
+            role="combobox"
+            id="tsd-search-input"
+            aria-controls="tsd-search-results"
+            aria-autocomplete="list"
+            aria-expanded="true"
+            autocapitalize="off"
+            autocomplete="off"
+            placeholder="Search the docs"
+            maxlength="100"
+          />
+          <ul role="listbox" id="tsd-search-results"></ul>
+          <div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+            <div>Preparing search index...</div>
+          </div>
+        </dialog>
+        <a
+          href="#"
+          class="tsd-widget menu"
+          id="tsd-toolbar-menu-trigger"
+          data-toggle="menu"
+          aria-label="Menu"
+          ><svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <use href="assets/icons.svg#icon-menu"></use></svg
+        ></a>
+      </div>
+    </header>
+    <div class="container container-main">
+      <div class="col-content">
+        <div class="tsd-page-title">
+          <h1>@sovereignbase/hardware-bound</h1>
+        </div>
+        <div class="tsd-panel tsd-typography">
+          <p>
+            <a
+              href="https://www.npmjs.com/package/@sovereignbase/hardware-bound"
+              ><img
+                src="https://img.shields.io/npm/v/@sovereignbase/hardware-bound"
+                alt="npm version"
+            /></a>
+            <a href="https://jsr.io/@sovereignbase/hardware-bound"
+              ><img
+                src="https://jsr.io/badges/@sovereignbase/hardware-bound"
+                alt="JSR"
+            /></a>
+            <a
+              href="https://github.com/sovereignbase/hardware-bound/actions/workflows/ci.yaml"
+              ><img
+                src="https://github.com/sovereignbase/hardware-bound/actions/workflows/ci.yaml/badge.svg?branch=master"
+                alt="CI"
+            /></a>
+            <a href="https://codecov.io/gh/sovereignbase/hardware-bound"
+              ><img
+                src="https://codecov.io/gh/sovereignbase/hardware-bound/branch/master/graph/badge.svg"
+                alt="codecov"
+            /></a>
+            <a href="LICENSE"
+              ><img
+                src="https://img.shields.io/npm/l/@sovereignbase/hardware-bound"
+                alt="license"
+            /></a>
+          </p>
+          <h1 id="hardware-bound" class="tsd-anchor-link">
+            hardware-bound<a
+              href="#hardware-bound"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h1>
+          <p>
+            Creates a device-bound browser credential and provides access to
+            stable entropy upon user authentication, enabling reliable
+            reconstruction of the same cryptographic state locally.
+          </p>
+          <h2 id="installation" class="tsd-anchor-link">
+            Installation<a
+              href="#installation"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h2>
+          <pre><code class="sh"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">deno</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">jsr:@sovereignbase/hardware-bound</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">vlt</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">jsr:@sovereignbase/hardware-bound</span>
 </code><button type="button">Copy</button></pre>
 
-<h2 id="usage" class="tsd-anchor-link">Usage<a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">createDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">accessDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">invalidateDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@sovereignbase/hardware-bound&#39;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">created</span><span class="hl-1">, </span><span class="hl-7">bindingStorage</span><span class="hl-1">] = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><span class="hl-2">&#39;Ada Lovelace&#39;</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">created</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding creation failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">bindingStorage</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">binding</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">accessDeviceBinding</span><span class="hl-1">()</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">binding</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding access failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">credentialId</span><span class="hl-1">, </span><span class="hl-7">entropy</span><span class="hl-1">] = </span><span class="hl-5">binding</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">credentialId</span><span class="hl-1">, </span><span class="hl-5">entropy</span><span class="hl-1">)</span><br/><br/><span class="hl-3">// When the credential is no longer accepted:</span><br/><span class="hl-3">// await invalidateDeviceBinding(credentialId)</span>
+          <h2 id="usage" class="tsd-anchor-link">
+            Usage<a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h2>
+          <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">createDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">accessDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">invalidateDeviceBinding</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@sovereignbase/hardware-bound&#39;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">created</span><span class="hl-1">, </span><span class="hl-7">bindingStorage</span><span class="hl-1">] = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><span class="hl-2">&#39;Ada Lovelace&#39;</span><span class="hl-1">)</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">created</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding creation failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">bindingStorage</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">binding</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">accessDeviceBinding</span><span class="hl-1">()</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-5">binding</span><span class="hl-1">) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;Device binding access failed&#39;</span><span class="hl-1">)</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">credentialId</span><span class="hl-1">, </span><span class="hl-7">entropy</span><span class="hl-1">] = </span><span class="hl-5">binding</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">credentialId</span><span class="hl-1">, </span><span class="hl-5">entropy</span><span class="hl-1">)</span><br/><br/><span class="hl-3">// When the credential is no longer accepted:</span><br/><span class="hl-3">// await invalidateDeviceBinding(credentialId)</span>
 </code><button type="button">Copy</button></pre>
 
-<h2 id="api" class="tsd-anchor-link">API<a href="#api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<h3 id="_" class="tsd-anchor-link"><code>createDeviceBinding(credentialName, signal?)</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Creates a device binding for the current origin.</p>
-<pre><code class="ts"><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialName</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;[</span><span class="hl-5">created</span><span class="hl-1">: </span><span class="hl-5">boolean</span><span class="hl-1">, </span><span class="hl-5">bindingStorage</span><span class="hl-1">: </span><span class="hl-5">DeviceBindingStorage</span><span class="hl-1">]&gt;</span>
+          <h2 id="api" class="tsd-anchor-link">
+            API<a href="#api" aria-label="Permalink" class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h2>
+          <h3 id="_" class="tsd-anchor-link">
+            <code>createDeviceBinding(credentialName, signal?)</code
+            ><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h3>
+          <p>Creates a device binding for the current origin.</p>
+          <pre><code class="ts"><span class="hl-0">createDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialName</span><span class="hl-1">: </span><span class="hl-5">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;[</span><span class="hl-5">created</span><span class="hl-1">: </span><span class="hl-5">boolean</span><span class="hl-1">, </span><span class="hl-5">bindingStorage</span><span class="hl-1">: </span><span class="hl-5">DeviceBindingStorage</span><span class="hl-1">]&gt;</span>
 </code><button type="button">Copy</button></pre>
 
-<p><strong>Parameters</strong></p>
-<ul>
-<li><code>credentialName</code>: The display name assigned to the credential.</li>
-<li><code>signal</code>: An optional <code>AbortSignal</code> used to cancel the operation.</li>
-</ul>
-<p><strong>Returns</strong></p>
-<p>A tuple containing the creation status and binding storage characteristics.</p>
-<p><code>bindingStorage</code> is one of:</p>
-<ul>
-<li><code>non-extractable</code>: The credential is not eligible for backup or synchronization.</li>
-<li><code>sync-eligible</code>: The credential is eligible for backup but has not been backed up.</li>
-<li><code>synced</code>: The credential has been backed up and may be available on other devices.</li>
-<li><code>unknown</code>: The credential's storage characteristics could not be determined.</li>
-</ul>
-<p>The storage classification reflects the credential's reported backup state, not whether its private key is hardware-protected.</p>
-<p>Returns <code>[false, 'unknown']</code> if credential creation fails or the required PRF functionality is unavailable.</p>
-<h3 id="_-1" class="tsd-anchor-link"><code>accessDeviceBinding(signal?)</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Accesses an existing device binding.</p>
-<pre><code class="ts"><span class="hl-0">accessDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-5">DeviceBinding</span><span class="hl-1"> | </span><span class="hl-6">false</span><span class="hl-1">&gt;</span>
+          <p><strong>Parameters</strong></p>
+          <ul>
+            <li>
+              <code>credentialName</code>: The display name assigned to the
+              credential.
+            </li>
+            <li>
+              <code>signal</code>: An optional <code>AbortSignal</code> used to
+              cancel the operation.
+            </li>
+          </ul>
+          <p><strong>Returns</strong></p>
+          <p>
+            A tuple containing the creation status and binding storage
+            characteristics.
+          </p>
+          <p><code>bindingStorage</code> is one of:</p>
+          <ul>
+            <li>
+              <code>non-extractable</code>: The credential is not eligible for
+              backup or synchronization.
+            </li>
+            <li>
+              <code>sync-eligible</code>: The credential is eligible for backup
+              but has not been backed up.
+            </li>
+            <li>
+              <code>synced</code>: The credential has been backed up and may be
+              available on other devices.
+            </li>
+            <li>
+              <code>unknown</code>: The credential's storage characteristics
+              could not be determined.
+            </li>
+          </ul>
+          <p>
+            The storage classification reflects the credential's reported backup
+            state, not whether its private key is hardware-protected.
+          </p>
+          <p>
+            Returns <code>[false, 'unknown']</code> if credential creation fails
+            or the required PRF functionality is unavailable.
+          </p>
+          <h3 id="_-1" class="tsd-anchor-link">
+            <code>accessDeviceBinding(signal?)</code
+            ><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h3>
+          <p>Accesses an existing device binding.</p>
+          <pre><code class="ts"><span class="hl-0">accessDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">signal</span><span class="hl-1">?: </span><span class="hl-5">AbortSignal</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-5">DeviceBinding</span><span class="hl-1"> | </span><span class="hl-6">false</span><span class="hl-1">&gt;</span>
 </code><button type="button">Copy</button></pre>
 
-<p><strong>Parameters</strong></p>
-<ul>
-<li><code>signal</code>: An optional <code>AbortSignal</code> used to cancel the operation.</li>
-</ul>
-<p><strong>Returns</strong></p>
-<p>A tuple containing the credential identifier and its associated entropy:</p>
-<pre><code class="ts"><span class="hl-6">type</span><span class="hl-1"> </span><span class="hl-8">DeviceBinding</span><span class="hl-1"> = [</span><span class="hl-9">id</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">, </span><span class="hl-9">entropy</span><span class="hl-1">: </span><span class="hl-8">Uint8Array</span><span class="hl-1">]</span>
+          <p><strong>Parameters</strong></p>
+          <ul>
+            <li>
+              <code>signal</code>: An optional <code>AbortSignal</code> used to
+              cancel the operation.
+            </li>
+          </ul>
+          <p><strong>Returns</strong></p>
+          <p>
+            A tuple containing the credential identifier and its associated
+            entropy:
+          </p>
+          <pre><code class="ts"><span class="hl-6">type</span><span class="hl-1"> </span><span class="hl-8">DeviceBinding</span><span class="hl-1"> = [</span><span class="hl-9">id</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">, </span><span class="hl-9">entropy</span><span class="hl-1">: </span><span class="hl-8">Uint8Array</span><span class="hl-1">]</span>
 </code><button type="button">Copy</button></pre>
 
-<ul>
-<li><code>id</code>: The Base64URL-encoded credential identifier.</li>
-<li><code>entropy</code>: Stable entropy bytes associated with the credential.</li>
-</ul>
-<p>The entropy consists of the concatenation of:</p>
-<ol>
-<li>The credential's raw identifier.</li>
-<li>The first PRF output.</li>
-<li>The second PRF output.</li>
-</ol>
-<p>Accessing the same credential with the same PRF inputs produces the same entropy, allowing applications to reconstruct cryptographic state without persisting the entropy themselves.</p>
-<p>Returns <code>false</code> if the credential cannot be accessed or the required PRF outputs are unavailable.</p>
-<h3 id="_-2" class="tsd-anchor-link"><code>invalidateDeviceBinding(credentialId)</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Requests invalidation of an existing device binding.</p>
-<pre><code class="ts"><span class="hl-0">invalidateDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialId</span><span class="hl-1">: </span><span class="hl-5">string</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-6">void</span><span class="hl-1">&gt;</span>
+          <ul>
+            <li>
+              <code>id</code>: The Base64URL-encoded credential identifier.
+            </li>
+            <li>
+              <code>entropy</code>: Stable entropy bytes associated with the
+              credential.
+            </li>
+          </ul>
+          <p>The entropy consists of the concatenation of:</p>
+          <ol>
+            <li>The credential's raw identifier.</li>
+            <li>The first PRF output.</li>
+            <li>The second PRF output.</li>
+          </ol>
+          <p>
+            Accessing the same credential with the same PRF inputs produces the
+            same entropy, allowing applications to reconstruct cryptographic
+            state without persisting the entropy themselves.
+          </p>
+          <p>
+            Returns <code>false</code> if the credential cannot be accessed or
+            the required PRF outputs are unavailable.
+          </p>
+          <h3 id="_-2" class="tsd-anchor-link">
+            <code>invalidateDeviceBinding(credentialId)</code
+            ><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h3>
+          <p>Requests invalidation of an existing device binding.</p>
+          <pre><code class="ts"><span class="hl-0">invalidateDeviceBinding</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">credentialId</span><span class="hl-1">: </span><span class="hl-5">string</span><br/><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-6">void</span><span class="hl-1">&gt;</span>
 </code><button type="button">Copy</button></pre>
 
-<p><strong>Parameters</strong></p>
-<ul>
-<li><code>credentialId</code>: The Base64URL-encoded identifier of the credential to invalidate.</li>
-</ul>
-<p><strong>Returns</strong></p>
-<p>A promise that resolves when the invalidation request completes.</p>
-<p>Invalidation is best-effort. The browser or credential provider may remove or hide the credential, but successful completion does not guarantee deletion.</p>
-<h2 id="behavior" class="tsd-anchor-link">Behavior<a href="#behavior" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<ul>
-<li><strong>User verification:</strong> Credential creation and access require user verification.</li>
-<li><strong>Stable entropy:</strong> Repeated access to the same credential provides consistent entropy for reconstructing local cryptographic state.</li>
-<li><strong>Offline-capable:</strong> No application-level network requests are required. Offline access depends on the credential being locally available.</li>
-<li><strong>No application storage:</strong> The library does not persist credentials or entropy in browser storage.</li>
-<li><strong>Error handling:</strong> Credential creation and access return failure values for unsuccessful credential requests. Unexpected failures are wrapped in <code>DeviceBoundError</code> with the <code>UNKNOWN_ERROR</code> code and the original cause.</li>
-<li><strong>Scope:</strong> Intended for bootstrapping local cryptographic state, not as a general-purpose authentication library.</li>
-</ul>
-<h2 id="tests" class="tsd-anchor-link">Tests<a href="#tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.</p>
-<h3 id="coverage" class="tsd-anchor-link">Coverage<a href="#coverage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<table>
-<thead>
-<tr>
-<th>Statements</th>
-<th>Branches</th>
-<th>Functions</th>
-<th>Lines</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
-</tr>
-</tbody>
-</table>
-<h3 id="browser-wrapper-tests" class="tsd-anchor-link">Browser wrapper tests<a href="#browser-wrapper-tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<table>
-<thead>
-<tr>
-<th>Browser</th>
-<th>Result</th>
-<th>Passed</th>
-<th>Failed</th>
-<th>Flaky</th>
-<th>Skipped</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Chromium</td>
-<td>Passed</td>
-<td>5</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>Firefox</td>
-<td>Passed</td>
-<td>5</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>WebKit</td>
-<td>Passed</td>
-<td>5</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>Mobile Chrome (Pixel 5 emulation)</td>
-<td>Passed</td>
-<td>5</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>Mobile Safari (iPhone 12 emulation)</td>
-<td>Passed</td>
-<td>5</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-<h3 id="native-webauthn-and-prf" class="tsd-anchor-link">Native WebAuthn and PRF<a href="#native-webauthn-and-prf" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<table>
-<thead>
-<tr>
-<th>Browser</th>
-<th>Result</th>
-<th>Passed</th>
-<th>Failed</th>
-<th>Flaky</th>
-<th>Skipped</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Chromium</td>
-<td>Passed</td>
-<td>6</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>Firefox</td>
-<td>Not run</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>WebKit</td>
-<td>Not run</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>Mobile Chrome (Pixel 5 emulation)</td>
-<td>Passed</td>
-<td>6</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>Mobile Safari (iPhone 12 emulation)</td>
-<td>Not run</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-<p>Wrapper tests use Playwright’s <code>context.credentials</code> mock, which currently returns no PRF extension results. They verify rejection of credentials without PRF support and unavailable credentials. Successful PRF operations use native browser virtual authenticators with automatic user verification.</p>
-<p>Native tests currently cover Chromium. “Not run” describes automated test coverage, not browser support. Mobile projects use device emulation.</p>
-<h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Apache-2.0</p>
-</div></div>
-<div class="col-sidebar">
-<div class="page-menu">
-<div class="tsd-navigation settings">
-<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>
-<h3>Settings</h3></summary>
-<div class="tsd-accordion-details">
-<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
-<ul id="tsd-filter-options">
-<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
-<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
-<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
-<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
-<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>
-<h3>On This Page</h3></summary>
-<div class="tsd-accordion-details"><a href="#hardware-bound"><span>hardware-<wbr/>bound</span></a>
-<ul>
-<li><a href="#installation"><span>Installation</span></a></li>
-<li><a href="#usage"><span>Usage</span></a></li>
-<li><a href="#api"><span>API</span></a></li>
-<li>
-<ul>
-<li><a href="#_"><span></span></a></li>
-<li><a href="#_-1"><span></span></a></li>
-<li><a href="#_-2"><span></span></a></li></ul></li>
-<li><a href="#behavior"><span>Behavior</span></a></li>
-<li><a href="#tests"><span>Tests</span></a></li>
-<li>
-<ul>
-<li><a href="#coverage"><span>Coverage</span></a></li>
-<li><a href="#browser-wrapper-tests"><span>Browser wrapper tests</span></a></li>
-<li><a href="#native-webauthn-and-prf"><span>Native <wbr/>Web<wbr/>Authn and <wbr/>PRF</span></a></li></ul></li>
-<li><a href="#license"><span>License</span></a></li></ul></div></details></div>
-<div class="site-menu">
-<nav class="tsd-navigation"><a href="modules.html">@sovereignbase/hardware-bound</a>
-<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
-<li>Loading...</li></ul></nav></div></div></div><footer>
-<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
-<div class="overlay"></div></body></html>
+          <p><strong>Parameters</strong></p>
+          <ul>
+            <li>
+              <code>credentialId</code>: The Base64URL-encoded identifier of the
+              credential to invalidate.
+            </li>
+          </ul>
+          <p><strong>Returns</strong></p>
+          <p>
+            A promise that resolves when the invalidation request completes.
+          </p>
+          <p>
+            Invalidation is best-effort. The browser or credential provider may
+            remove or hide the credential, but successful completion does not
+            guarantee deletion.
+          </p>
+          <h2 id="behavior" class="tsd-anchor-link">
+            Behavior<a
+              href="#behavior"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h2>
+          <ul>
+            <li>
+              <strong>User verification:</strong> Credential creation and access
+              require user verification.
+            </li>
+            <li>
+              <strong>Stable entropy:</strong> Repeated access to the same
+              credential provides consistent entropy for reconstructing local
+              cryptographic state.
+            </li>
+            <li>
+              <strong>Offline-capable:</strong> No application-level network
+              requests are required. Offline access depends on the credential
+              being locally available.
+            </li>
+            <li>
+              <strong>No application storage:</strong> The library does not
+              persist credentials or entropy in browser storage.
+            </li>
+            <li>
+              <strong>Error handling:</strong> Credential creation and access
+              return failure values for unsuccessful credential requests.
+              Unexpected failures are wrapped in
+              <code>DeviceBoundError</code> with the
+              <code>UNKNOWN_ERROR</code> code and the original cause.
+            </li>
+            <li>
+              <strong>Scope:</strong> Intended for bootstrapping local
+              cryptographic state, not as a general-purpose authentication
+              library.
+            </li>
+          </ul>
+          <h2 id="tests" class="tsd-anchor-link">
+            Tests<a href="#tests" aria-label="Permalink" class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h2>
+          <p>Vitest: 56 passed, 0 failed, 0 skipped, 0 todo. Result: passed.</p>
+          <h3 id="coverage" class="tsd-anchor-link">
+            Coverage<a
+              href="#coverage"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Statements</th>
+                <th>Branches</th>
+                <th>Functions</th>
+                <th>Lines</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>100%</td>
+                <td>100%</td>
+                <td>100%</td>
+                <td>100%</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3 id="browser-wrapper-tests" class="tsd-anchor-link">
+            Browser wrapper tests<a
+              href="#browser-wrapper-tests"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Browser</th>
+                <th>Result</th>
+                <th>Passed</th>
+                <th>Failed</th>
+                <th>Flaky</th>
+                <th>Skipped</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Chromium</td>
+                <td>Passed</td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Firefox</td>
+                <td>Passed</td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>WebKit</td>
+                <td>Passed</td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Mobile Chrome (Pixel 5 emulation)</td>
+                <td>Passed</td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Mobile Safari (iPhone 12 emulation)</td>
+                <td>Passed</td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3 id="native-webauthn-and-prf" class="tsd-anchor-link">
+            Native WebAuthn and PRF<a
+              href="#native-webauthn-and-prf"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Browser</th>
+                <th>Result</th>
+                <th>Passed</th>
+                <th>Failed</th>
+                <th>Flaky</th>
+                <th>Skipped</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Chromium</td>
+                <td>Passed</td>
+                <td>6</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Firefox</td>
+                <td>Not run</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>WebKit</td>
+                <td>Not run</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Mobile Chrome (Pixel 5 emulation)</td>
+                <td>Passed</td>
+                <td>6</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Mobile Safari (iPhone 12 emulation)</td>
+                <td>Not run</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            Wrapper tests use Playwright’s
+            <code>context.credentials</code> mock, which currently returns no
+            PRF extension results. They verify rejection of credentials without
+            PRF support and unavailable credentials. Successful PRF operations
+            use native browser virtual authenticators with automatic user
+            verification.
+          </p>
+          <p>
+            Native tests currently cover Chromium. “Not run” describes automated
+            test coverage, not browser support. Mobile projects use device
+            emulation.
+          </p>
+          <h2 id="license" class="tsd-anchor-link">
+            License<a
+              href="#license"
+              aria-label="Permalink"
+              class="tsd-anchor-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <use href="assets/icons.svg#icon-anchor"></use></svg
+            ></a>
+          </h2>
+          <p>Apache-2.0</p>
+        </div>
+      </div>
+      <div class="col-sidebar">
+        <div class="page-menu">
+          <div class="tsd-navigation settings">
+            <details class="tsd-accordion">
+              <summary class="tsd-accordion-summary">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <use href="assets/icons.svg#icon-chevronDown"></use>
+                </svg>
+                <h3>Settings</h3>
+              </summary>
+              <div class="tsd-accordion-details">
+                <div class="tsd-filter-visibility">
+                  <span class="settings-label">Member Visibility</span>
+                  <ul id="tsd-filter-options">
+                    <li class="tsd-filter-item">
+                      <label class="tsd-filter-input"
+                        ><input
+                          type="checkbox"
+                          id="tsd-filter-protected"
+                          name="protected"
+                        /><svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          aria-hidden="true"
+                        >
+                          <rect
+                            class="tsd-checkbox-background"
+                            width="30"
+                            height="30"
+                            x="1"
+                            y="1"
+                            rx="6"
+                            fill="none"
+                          ></rect>
+                          <path
+                            class="tsd-checkbox-checkmark"
+                            d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25"
+                            stroke="none"
+                            stroke-width="3.5"
+                            stroke-linejoin="round"
+                            fill="none"
+                          ></path></svg
+                        ><span>Protected</span></label
+                      >
+                    </li>
+                    <li class="tsd-filter-item">
+                      <label class="tsd-filter-input"
+                        ><input
+                          type="checkbox"
+                          id="tsd-filter-inherited"
+                          name="inherited"
+                          checked
+                        /><svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          aria-hidden="true"
+                        >
+                          <rect
+                            class="tsd-checkbox-background"
+                            width="30"
+                            height="30"
+                            x="1"
+                            y="1"
+                            rx="6"
+                            fill="none"
+                          ></rect>
+                          <path
+                            class="tsd-checkbox-checkmark"
+                            d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25"
+                            stroke="none"
+                            stroke-width="3.5"
+                            stroke-linejoin="round"
+                            fill="none"
+                          ></path></svg
+                        ><span>Inherited</span></label
+                      >
+                    </li>
+                    <li class="tsd-filter-item">
+                      <label class="tsd-filter-input"
+                        ><input
+                          type="checkbox"
+                          id="tsd-filter-external"
+                          name="external"
+                        /><svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          aria-hidden="true"
+                        >
+                          <rect
+                            class="tsd-checkbox-background"
+                            width="30"
+                            height="30"
+                            x="1"
+                            y="1"
+                            rx="6"
+                            fill="none"
+                          ></rect>
+                          <path
+                            class="tsd-checkbox-checkmark"
+                            d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25"
+                            stroke="none"
+                            stroke-width="3.5"
+                            stroke-linejoin="round"
+                            fill="none"
+                          ></path></svg
+                        ><span>External</span></label
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="tsd-theme-toggle">
+                  <label class="settings-label" for="tsd-theme">Theme</label
+                  ><select id="tsd-theme">
+                    <option value="os">OS</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+          </div>
+          <details open class="tsd-accordion tsd-page-navigation">
+            <summary class="tsd-accordion-summary">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <use href="assets/icons.svg#icon-chevronDown"></use>
+              </svg>
+              <h3>On This Page</h3>
+            </summary>
+            <div class="tsd-accordion-details">
+              <a href="#hardware-bound"
+                ><span>hardware-<wbr />bound</span></a
+              >
+              <ul>
+                <li>
+                  <a href="#installation"><span>Installation</span></a>
+                </li>
+                <li>
+                  <a href="#usage"><span>Usage</span></a>
+                </li>
+                <li>
+                  <a href="#api"><span>API</span></a>
+                </li>
+                <li>
+                  <ul>
+                    <li>
+                      <a href="#_"><span></span></a>
+                    </li>
+                    <li>
+                      <a href="#_-1"><span></span></a>
+                    </li>
+                    <li>
+                      <a href="#_-2"><span></span></a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#behavior"><span>Behavior</span></a>
+                </li>
+                <li>
+                  <a href="#tests"><span>Tests</span></a>
+                </li>
+                <li>
+                  <ul>
+                    <li>
+                      <a href="#coverage"><span>Coverage</span></a>
+                    </li>
+                    <li>
+                      <a href="#browser-wrapper-tests"
+                        ><span>Browser wrapper tests</span></a
+                      >
+                    </li>
+                    <li>
+                      <a href="#native-webauthn-and-prf"
+                        ><span
+                          >Native <wbr />Web<wbr />Authn and <wbr />PRF</span
+                        ></a
+                      >
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#license"><span>License</span></a>
+                </li>
+              </ul>
+            </div>
+          </details>
+        </div>
+        <div class="site-menu">
+          <nav class="tsd-navigation">
+            <a href="modules.html">@sovereignbase/hardware-bound</a>
+            <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+              <li>Loading...</li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p class="tsd-generator">
+        Generated using
+        <a href="https://typedoc.org/" target="_blank">TypeDoc</a>
+      </p>
+    </footer>
+    <div class="overlay"></div>
+  </body>
+</html>
